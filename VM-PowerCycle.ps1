@@ -171,16 +171,16 @@ Begin {
     ###
     ### Watch for finished Tasks
     ###
-    #While ( $RunningTaskTable.Count -ne "0" ) {
-        $RunningTaskTable.Count
-        $TMPVMActionInfo = "" | select ClusterName,VMHost,VMName,PowerState,VMToolsStatus,ShutdownTask,ShutdownTaskId,ShutdownTaskState,ShutdownStartTime,ShutdownFinishTime,PowerOnTaskId,PowerOnTaskState,PowerOnStartTime,PowerOnFinishTime,Flags,TaskState,Remark
+	
+	$VMsToBeCompleted = $RunningTaskTable.Count
+    #While ( $VMsToBeCompleted -ne "0" ) 
+	    #$TMPVMActionInfo = "" | select ClusterName,VMHost,VMName,PowerState,VMToolsStatus,ShutdownTask,ShutdownTaskId,ShutdownTaskState,ShutdownStartTime,ShutdownFinishTime,PowerOnTaskId,PowerOnTaskState,PowerOnStartTime,PowerOnFinishTime,Flags,TaskState,Remark
         foreach ( $RunningTask in $RunningTaskTable ) {
-            $RunningTask
-
-             $RunningTask.PowerOnFinishTime = Get-Date -UFormat "%A,%x %TUhr"
-             $RunningTask.TaskState = "SUCCESSFULL"
-             $ActionLogTable += $RunningTask
-        }
+			switch ($RunningTask.State) {
+			  0 {"xx"}
+			  1 {"yy"}
+			}
+		}
         $RunningTaskTable = "" | select ClusterName,VMHost,VMName,PowerState,VMToolsStatus,ShutdownTask,ShutdownTaskId,ShutdownTaskState,ShutdownStartTime,ShutdownFinishTime,PowerOnTaskId,PowerOnTaskState,PowerOnStartTime,PowerOnFinishTime,Flags,TaskState,Remark
         $RunningTaskTable.Count
     #}
