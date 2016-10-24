@@ -1,4 +1,4 @@
-Function VM-Deploy-from-Tab {
+Function VM-DeployfromTab {
 <#
 .SYNOPSIS
   Mass Deployment for VMs for VMware vCenter 
@@ -6,14 +6,14 @@ Function VM-Deploy-from-Tab {
   Mass Deployment for VMs for VMware vCenter
   The list of VMs that have to be deployed comes from an external csv file
 .SYNTAX
- VM-Deploy-from-Tab [-Start:$true] [-MAXSESSIONS [1...]] [-FILENAME <INPUTFILE>]
+ VM-DeployfromTab [-Start:$true] [-MAXSESSIONS [1...]] [-FILENAME <INPUTFILE>]
  .PARAMETER Start
  .PARAMETER MAXSESSIONS
  .PARAMETER FILENAME
 .EXAMPLE
- VM-Deploy-from-Tab
+ VM-DeployfromTab
 .EXAMPLE
- VM-Deploy-from-Tab -Start:$true
+ VM-DeployfromTab -Start:$true
 .NOTES
   Release 1.0
   Robert Ebneth
@@ -24,6 +24,7 @@ Function VM-Deploy-from-Tab {
 
 	#[CmdletBinding()]
 	param(
+    # We expect the default input file rollout.csv in the same directory as the script
 	[Parameter(Mandatory = $False, ValueFromPipeline=$false,
 	HelpMessage = "Enter the path to the tsv input file")]
     [Alias("f")]
@@ -34,29 +35,29 @@ Function VM-Deploy-from-Tab {
     [Parameter(Mandatory = $False, ValueFromPipeline=$false,
     HelpMessage = "Enter number of max parallel create VM sessions (Default: 4)")]
     [Alias("m")]
-	[int]$MAXSESSIONS = "4"
+	[int]$MAXSESSIONS = "2"
    )
-
-	$CREATEVM_SESSION_INFO = @()
-	$CREATEVM_LOG = @()
  
- if ((Test-Path $FILENAME) -eq $False)
-	{ Write-Error "Missing Input File: $FILENAME"; break}
+    # Check input file with list of VMs to deploy
+    if ((Test-Path $FILENAME) -eq $False)
+	    { Write-Error "Missing Input File: $FILENAME"; break}
 
-# if (-not (Get-PSSnapin VMware.VimAutomation.Core -ErrorAction SilentlyContinue)) {
-#    Add-PSSnapin VMware.VimAutomation.Core
-#}
+    if (-not (Get-PSSnapin VMware.VimAutomation.Core -ErrorAction SilentlyContinue)) {
+        Add-PSSnapin VMware.VimAutomation.Core }
+    # We need VMware Module VMware.VimAutomation.Core (Get-VDPortgroup)
+    if(-not(Get-Module -name VMware.VimAutomation.Vds ))
+        { Import-Module VMware.VimAutomation.Vds -ErrorAction SilentlyContinue }
  
-    $vcenter = "vcenter.hal.dbrent.net"
+    $vcenter = "vcenter001-betrieb-prod.hal.dbrent.net"
 
     #On demand: asking the admin for vcenter credentials at each run of the script
-#    if(!$Session.IsConnected){
-#		$credential = Get-Credential -Message "Enter Credentials for $vcenter" -UserName "yourusername@vsphere6.local"
-#        $Session = Connect-VIServer -Server $vcenter -Force -Credential $credential
-#		if ($? -eq $false) {break}
-#		# if we did a successful vCenter Login, then we disconnect at the end 
-#		$LOGIN_IN_FUNCTION = $true
-#    }
+    if(!$defaultVIServer.IsConnected){
+		$credential = Get-Credential -Message "Enter Credentials for $vcenter" -UserName "yourusername@vsphere6.local"
+        $Session = Connect-VIServer -Server $vcenter -Force -Credential $credential
+		if ($? -eq $false) {break}
+		# if we did a successful vCenter Login, then we disconnect at the end 
+		$LOGIN_IN_FUNCTION = $true
+    }
 
     ###
     ### Import List of VMs that have to be deployed to an Array
@@ -64,17 +65,9 @@ Function VM-Deploy-from-Tab {
     ###
     $VMsToDeploy=@()
     $VMsToDeploy = Import-Csv $FILENAME -Delimiter ","
-#    Import-Csv $FILENAME -Delimiter ","| ForEach-Object {
-#        $server = @{name=$_.vmname;
-#        template=$_.template;
-#        vlan=$_.vlan;
-#        resourcepool=$_.resourcepool;
-#        customspec=$_.customspec;
-#        datastore=$_.datastore;
-#        vmfolder=$_.vmfolder}
-
-#        $VMsToDeploy += @{$server.name=$server}
-#    }
+    ### Session Table for processing and LOG
+	$CREATEVM_SESSION_INFO = @()
+	$CREATEVM_LOG = @()
 
 	# For further processing we need a list that will be decreased
 	$ServerListe = $VMsToDeploy
@@ -82,9 +75,9 @@ Function VM-Deploy-from-Tab {
     ###
 	### Loop for starting clone_from_template sessions
     ###
-	while ( $ServerListe.Count -gt "0" ) {
+	while (( $ServerListe.Count -gt "0" ) -or ( $CREATEVM_SESSION_INFO.Count -gt "0" )) {
 		# Do we have a 'free' create VM task slot ?
-		if ( $CREATEVM_SESSION_INFO.Count -lt $MAXSESSIONS ) {
+		if (( $ServerListe.Count -gt "0" ) -and ( $CREATEVM_SESSION_INFO.Count -lt $MAXSESSIONS )) {
 			$VM_TO_CREATE = $ServerListe[0]
             # Let's start with some checks...
             Get-VM -Name $VM_TO_CREATE.VMName -ErrorAction SilentlyContinue
@@ -147,8 +140,8 @@ Function VM-Deploy-from-Tab {
 			
 			$CurrentTaskStatus = Get-Task -Id $CREATEVM_TASK.Id
            	$CREATEVM_TASK_INFO = "" | Select Task, TaskId, VMName, State, PercentComplete, StartTime, FinishTime
-            $CREATEVM_TASK_INFO.Task = "CreateVM_Task"
-			$CREATEVM_TASK_INFO.TaskId = $CREATEVM_TASK.Id
+            $CREATEVM_TASK_INFO.Task = $CurrentTaskStatus.Name
+			$CREATEVM_TASK_INFO.TaskId = $CurrentTaskStatus.Id
 			$CREATEVM_TASK_INFO.VMName = $VM_TO_CREATE.VMname
 			$CREATEVM_TASK_INFO.State = $CurrentTaskStatus.State
 			$CREATEVM_TASK_INFO.PercentComplete = $CurrentTaskStatus.PercentComplete
@@ -168,63 +161,61 @@ Function VM-Deploy-from-Tab {
 			Write-Host ""
 			# We sleep for 12 seconds
 			Start-Sleep 12
+        } ### End
 
-			# At this point we will check if we have finished sessions to update session list
-			$TMP_CREATEVM_SESSION_INFO = @()
-            foreach ( $CREATEVM_SESSION in $CREATEVM_SESSION_INFO ) {				
-				$CurrentTaskStatus = Get-Task -Id "$($CREATEVM_SESSION.TaskId)"
-				$CREATEVM_TASK_INFO = "" | Select Task, TaskId, VMName, VMHost, VMDestDatastore, State, PercentComplete, StartTime, FinishTime
-				$CREATEVM_TASK_INFO.Task = $CREATEVM_SESSION.Task
-				$CREATEVM_TASK_INFO.TaskId = $CREATEVM_SESSION.TaskId
-				$CREATEVM_TASK_INFO.VMName = $CREATEVM_SESSION.VMName
-			    $CREATEVM_TASK_INFO.VMHost = $VMHost
-                $CREATEVM_TASK_INFO.VMDestDatastore = $Dest_Datastore
-				$CREATEVM_TASK_INFO.State = $CurrentTaskStatus.State
-				$CREATEVM_TASK_INFO.PercentComplete = $CurrentTaskStatus.PercentComplete
-				$CREATEVM_TASK_INFO.StartTime = $CurrentTaskStatus.StartTime
-				$CREATEVM_TASK_INFO.FinishTime = $CurrentTaskStatus.FinishTime
+		###
+        ### At this point we will check if we have finished sessions to update session list
+        ###
+		$TMP_CREATEVM_SESSION_INFO = @()
+        foreach ( $CREATEVM_SESSION in $CREATEVM_SESSION_INFO ) {				
+			$CurrentTaskStatus = Get-Task -Id "$($CREATEVM_SESSION.TaskId)"
+			$CHECK_TASK_INFO = "" | Select Task, TaskId, VMName, State, PercentComplete, StartTime, FinishTime
+			$CHECK_TASK_INFO.Task = $CREATEVM_SESSION.Task
+			$CHECK_TASK_INFO.TaskId = $CREATEVM_SESSION.TaskId
+			$CHECK_TASK_INFO.VMName = $CREATEVM_SESSION.VMName
+			$CHECK_TASK_INFO.State = $CurrentTaskStatus.State
+			$CHECK_TASK_INFO.PercentComplete = $CurrentTaskStatus.PercentComplete
+			$CHECK_TASK_INFO.StartTime = $CurrentTaskStatus.StartTime
+			$CHECK_TASK_INFO.FinishTime = $CurrentTaskStatus.FinishTime
 					
-				if ( $CurrentTaskStatus.State -eq "Running" ) {
-					# Update vMotion Session Info
-					$TMP_CREATEVM_SESSION_INFO += $CREATEVM_TASK_INFO
-					}
-				  else {
-					# Log all completed sessions
-					$CREATEVM_LOG += $CREATEVM_TASK_INFO
-					# If a VM was succesfully created, we change Network and start the VM
-					if ($CurrentTaskStatus.State -eq "Success") {
-						$VM = $VMsToDeploy | Where { $_.Name -eq "$($CurrentTaskStatus.VMName)"}
-					    Write-Host "Changing VLAN network setting for VM $($VM.VMname)..." -NoNewline
-
-                        Get-NetworkAdapter -VM $VM.VMname |`
-                        Set-NetworkAdapter -PortGroup (Get-VDPortGroup -Name $VM.vlan ) `
-                        -VM (Get-VM $VM.VMname -ErrorAction SilentlyContinue) `
-                        #-Name "Network adapter 1" `
-                        -ErrorAction SilentlyContinue `
-						-StartConnected:$true `
-						-Confirm:$false `
-						-Verbose `
-						-RunAsync:$false `
-                        if ($? -eq $True) {
-                            write-host "successfull" -ForegroundColor Green
-                            if ($Start -eq $true) { Write-Host "Starting VM $($VM.VMname)..."
+			if ( $CHECK_TASK_INFO.State -eq "Running" ) {
+				# Update vMotion Session Info
+				$TMP_CREATEVM_SESSION_INFO += $CHECK_TASK_INFO
+				}
+			  else {
+				# Log all completed sessions
+				$CREATEVM_LOG += $CHECK_TASK_INFO
+				# If a VM was succesfully created, we change Network and start the VM
+				if ($CHECK_TASK_INFO.State -eq "Success") {
+					$VM = $VMsToDeploy | Where { $_.VMName -eq "$($CHECK_TASK_INFO.VMName)"}
+				    Write-Host "Changing VLAN network setting for VM $($VM.VMName)..." -NoNewline
+                    $FirstNetworkAdapter = Get-NetworkAdapter -VM $VM.VMname
+                    Get-NetworkAdapter -VM $VM.VMname |`
+                    Set-NetworkAdapter -NetworkName $($VM.vlan) `
+                    -ErrorAction SilentlyContinue `
+					-StartConnected:$true `
+					-Confirm:$false `
+					-Verbose `
+					-RunAsync:$false `
+                    if ($? -eq $True) {
+                        write-host "successfull" -ForegroundColor Green
+                        if ($Start -eq $true) { Write-Host "Starting VM $($VM.VMname)..."
                                             Start-VM -Name $VM.VMname }
-                           else {
-                            write-host "FAILED" -ForegroundColor Red
-
-                           }
                         }
-					}
-				  }
-			    # Set the currenntly still running sessions
-			    $CREATEVM_SESSION_INFO = $TMP_CREATEVM_SESSION_INFO
-		    }
-            write-host "Running Create VM Sessions..."
-            $CREATEVM_SESSION_INFO | select * | Format-Table -AutoSize
-            Write-Host "We wait for 5 Seconds..."
-            Start-Sleep 5
-        }
-	} ### End Loop Server.Liste
+                      else {
+                        write-host "FAILED" -ForegroundColor Red
+                           }
+                }
+			}
+			# Set the currenntly still running sessions
+			$CREATEVM_SESSION_INFO = $TMP_CREATEVM_SESSION_INFO
+        } ### End foreach session loop
+        write-host "Currently running CreateVM Sessions..."
+        $CREATEVM_SESSION_INFO | select * | Format-Table -AutoSize
+        Write-Host "Remaining number of VMs to deploy: $($ServerListe.Count). Maximum number of concurrent VM depolyments: $($MAXSESSIONS). We wait for 5 Seconds..."
+        Start-Sleep 5
+
+	} ### End While Loop Server.Liste
 
 	# At this point we wait until all running Create VM sessions are finished
 
@@ -233,7 +224,7 @@ Function VM-Deploy-from-Tab {
 	$CREATEVM_LOG | Out-GridView
 	
 	# if we had a vCenter Login at the begin of this function we will disconnect vCenter (re-establish state)
-#	if ($LOGIN_IN_FUNCTION = $true) {
-#		    Disconnect-VIServer -Server $vcenter -Confirm:$false}
+	if ($LOGIN_IN_FUNCTION = $true) {
+		    Disconnect-VIServer -Server $vcenter -Confirm:$false}
 
 } ### End Function
