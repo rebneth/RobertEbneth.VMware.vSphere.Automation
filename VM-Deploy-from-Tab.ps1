@@ -115,17 +115,15 @@ Function VM-DeployfromTab {
         Write-Host "Possible Syntax errors in input file. Aborting." -ForegroundColor Red
         break
     }
+
     # Finally, we check input file for duplicate VM Names
     $AllVMNames = $VMsToDeploy | Select VMName
     $UniqueVMNames = $VMsToDeploy | Select VMName | Get-Unique -AsString
-
     if ( diff $AllVMNames $UniqueVMNames ) {
         Write-Host "Error: Input file contains duplicate VM Names" -ForegroundColor Red
         break
     }
 
-    break
-    
     ### Session Table for processing and LOG
 	$CREATEVM_SESSION_INFO = @()
 	$CREATEVM_LOG = @()
