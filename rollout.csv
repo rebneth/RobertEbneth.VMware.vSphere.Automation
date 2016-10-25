@@ -1,0 +1,7 @@
+vmname,vccluster,resourcepool,vlan,template,customspec,datastorecluster,NumvCPU,vRAMGB,vmfolder
+VMTest001_Robert,Cluster_Leipzig_2_ESX6,VM_Deployment_Test,VM-2010--VM-1014,ubuntu14045lts440template001,Markus_Linux_Templates,DBRent-RZS-SATA-Backup,2,2,TO DELETE
+VMTest001_Robert,Cluster_Leipzig_2_ESX6,VM_Deployment_Test,VM-2010--VM-1014,ubuntu14045lts440template001,Markus_Linux_Templates,DBRent-RZS-SATA-Backup,2,2,TO DELETE
+VMTest003_Robert,Cluster_Leipzig_2_ESX6,VM_Deployment_Test,VM-2010--VM-1014,ubuntu14045lts440template001,Markus_Linux_Templates,DBRent-RZS-SATA-Backup,,,TO DELETE
+VMTest004_Robert,Cluster_Leipzig_2_ESX6,VM_Deployment_Test,VM-2010--VM-1014,ubuntu14045lts440template001,Markus_Linux_Templates,DBRent-RZS-SATA-Backup,,,TO DELETE
+VMTest005_Robert,Cluster_Leipzig_2_ESX6,VM_Deployment_Test,VM-2010--VM-1014,ubuntu14045lts440template001,Markus_Linux_Templates,DBRent-RZS-SATA-Backup,,,TO DELETE
+VMTest006_Robert,Cluster_Leipzig_2_ESX6,VM_Deployment_Test,VM-2010--VM-1014,ubuntu14045lts440template001,Markus_Linux_Templates,DBRent-RZS-SATA-Backup,,,TO DELETE

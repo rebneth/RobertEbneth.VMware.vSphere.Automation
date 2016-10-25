@@ -17,7 +17,7 @@ Function VM-DeployfromTab {
 .NOTES
   Release 1.0
   Robert Ebneth
-  October, 24th, 2016
+  October, 25th, 2016
 .LINK
  http://github.com/rebneth
 #>
@@ -26,7 +26,7 @@ Function VM-DeployfromTab {
 	param(
     # We expect the default input file rollout.csv in the same directory as the script
 	[Parameter(Mandatory = $False, ValueFromPipeline=$false,
-	HelpMessage = "Enter the path to the tsv input file")]
+	HelpMessage = "Enter the path to the csv input file")]
     [Alias("f")]
 	[string]$FILENAME = "$($PSScriptRoot)\rollout.csv",
     [Parameter(Mandatory = $False, ValueFromPipeline=$false,
@@ -37,18 +37,19 @@ Function VM-DeployfromTab {
     [Alias("m")]
 	[int]$MAXSESSIONS = "2"
    )
+
+   $vcenter = "vcenter001-betrieb-prod.hal.dbrent.net"
  
     # Check input file with list of VMs to deploy
     if ((Test-Path $FILENAME) -eq $False)
 	    { Write-Error "Missing Input File: $FILENAME"; break}
 
+    # Load VMware PS Core Module/SnapIn
     if (-not (Get-PSSnapin VMware.VimAutomation.Core -ErrorAction SilentlyContinue)) {
         Add-PSSnapin VMware.VimAutomation.Core }
     # We need VMware Module VMware.VimAutomation.Core (Get-VDPortgroup)
     if(-not(Get-Module -name VMware.VimAutomation.Vds ))
         { Import-Module VMware.VimAutomation.Vds -ErrorAction SilentlyContinue }
- 
-    $vcenter = "vcenter001-betrieb-prod.hal.dbrent.net"
 
     #On demand: asking the admin for vcenter credentials at each run of the script
     if(!$defaultVIServer.IsConnected){
@@ -64,7 +65,67 @@ Function VM-DeployfromTab {
     ### Hash Tables cannot be used as we use an index to this array
     ###
     $VMsToDeploy=@()
+    ### We expect the following fields:
+    ### vmname,vccluster,resourcepool,vlan,template,customspec,datastorecluster,NumvCPU(opt),vRAMGB(opt),vmfolder
     $VMsToDeploy = Import-Csv $FILENAME -Delimiter ","
+    ### We do some basic syntax checking at this point to avoid errors during deployment....
+    $TMP_VMsToDeploy = @()
+    [INT]$LineCount = 1
+    foreach ( $VM_TO_CREATE in $VMsToDeploy ) {
+        $LineCount++
+        $status = Get-VM -Name $VM_TO_CREATE.VMName -ErrorAction SilentlyContinue
+        If ( $? -eq $true ) {
+           Write-Host "Error in input file line #$($LineCount): Required VM to create $($VM_TO_CREATE.VMName) already exists"
+           continue
+        }
+        $status = Get-Cluster $VM_TO_CREATE.VCCluster
+        If ( $? -eq $false ) {
+            Write-Host "Error in input file line #$($LineCount): Required Cluster $($VM_TO_CREATE.VCCluster) does not exist."
+            continue
+        }
+        $status = Get-Cluster $VM_TO_CREATE.VCCluster | Get-ResourcePool $($VM_TO_CREATE.ResourcePool)  -ErrorAction SilentlyContinue |Out-Null
+        If ( $? -eq $false ) {
+            Write-Host "Error in input file line #$($LineCount): Required Resource Pool $($VM_TO_CREATE.ResourcePool) does not exist."
+            continue
+        }
+        $status = Get-Template $VM_TO_CREATE.Template  -ErrorAction SilentlyContinue | Out-Null
+        If ( $? -eq $false ) {
+            Write-Host "Error in input file line #$($LineCount): Required Template $($VM_TO_CREATE.Template) not found"
+            continue
+        }
+        $status = Get-OSCustomizationSpec $VM_TO_CREATE.customspec -ErrorAction SilentlyContinue
+        If ( $? -eq $false ) {
+            Write-Host "Error in input file line #$($LineCount): Required CustomSpec $($VM_TO_CREATE.customspec) not found"
+            continue
+        }
+        $status = Get-Cluster $VM_TO_CREATE.VCCluster | Get-VMHost | Get-VirtualPortGroup -Name $VM_TO_CREATE.Vlan -ErrorAction SilentlyContinue | Out-Null
+        If ( $? -eq $false ) {
+            Write-Host "Error in input file line #$($LineCount): Required VLAN $($VM_TO_CREATE.Vlan) not found"
+            continue
+        }
+        $status = Get-DatastoreCluster -Name $VM_TO_CREATE.datastorecluster -ErrorAction SilentlyContinue
+        If ( $? -eq $false ) {
+            Write-Host "Error in input file line #$($LineCount): Required Datastore Cluster $($VM_TO_CREATE.datastorecluster) not found"
+            continue
+        }
+        # $VM_TO_CREATE line has passed all checks
+        $TMP_VMsToDeploy += $VM_TO_CREATE
+    }
+    if ( $TMP_VMsToDeploy.Count -ne $VMsToDeploy.Count ) {
+        Write-Host "Possible Syntax errors in input file. Aborting." -ForegroundColor Red
+        break
+    }
+    # Finally, we check input file for duplicate VM Names
+    $AllVMNames = $VMsToDeploy | Select VMName
+    $UniqueVMNames = $VMsToDeploy | Select VMName | Get-Unique -AsString
+
+    if ( diff $AllVMNames $UniqueVMNames ) {
+        Write-Host "Error: Input file contains duplicate VM Names" -ForegroundColor Red
+        break
+    }
+
+    break
+    
     ### Session Table for processing and LOG
 	$CREATEVM_SESSION_INFO = @()
 	$CREATEVM_LOG = @()
@@ -78,49 +139,12 @@ Function VM-DeployfromTab {
 	while (( $ServerListe.Count -gt "0" ) -or ( $CREATEVM_SESSION_INFO.Count -gt "0" )) {
 		# Do we have a 'free' create VM task slot ?
 		if (( $ServerListe.Count -gt "0" ) -and ( $CREATEVM_SESSION_INFO.Count -lt $MAXSESSIONS )) {
+            # we pick the first VM to create from the list and reduce this list by this VM
+            # this cannot be done by any foreach loop as it  might be interrupted one ore more times 
 			$VM_TO_CREATE = $ServerListe[0]
-            # Let's start with some checks...
-            Get-VM -Name $VM_TO_CREATE.VMName -ErrorAction SilentlyContinue
-            If ( $? -eq $true ) {
-                Write-Host "Error: Required VM to create $($VM_TO_CREATE.VMName) already exists"
-                break
-            }
-            $status = Get-Cluster $VM_TO_CREATE.VCCluster
-            If ( $? -eq $false ) {
-                Write-Host "Error: Required Cluster $($VM_TO_CREATE.VCCluster) does not exist."
-                break
-            }
-            $status = Get-Cluster $VM_TO_CREATE.VCCluster | Get-ResourcePool $($VM_TO_CREATE.ResourcePool)  -ErrorAction SilentlyContinue |Out-Null
-            If ( $? -eq $false ) {
-                Write-Host "Error: Required Resource Pool $($VM_TO_CREATE.ResourcePool) does not exist."
-                break
-            }
-            $status = Get-Template $VM_TO_CREATE.Template 
-            If ( $? -eq $false ) {
-                Write-Host "Error: Required Template $($VM_TO_CREATE.Template) not found"
-                break
-            }
-            $status = Get-OSCustomizationSpec $VM_TO_CREATE.customspec -ErrorAction SilentlyContinue
-            If ( $? -eq $false ) {
-                Write-Host "Error: Required CustomSpec $($VM_TO_CREATE.customspec) not found"
-                break
-            }
-            $status = Get-Cluster $VM_TO_CREATE.VCCluster | Get-VMHost | Get-VirtualPortGroup -Name $VM_TO_CREATE.Vlan -ErrorAction SilentlyContinue | Out-Null
-            If ( $? -eq $false ) {
-                Write-Host "Error: Required VLAN $($VM_TO_CREATE.Vlan) not Found"
-                break
-            }
-            $status = Get-DatastoreCluster -Name $VM_TO_CREATE.datastorecluster -ErrorAction SilentlyContinue
-            If ( $? -eq $false ) {
-                Write-Host "Error: Required Datastore Cluster $($VM_TO_CREATE.datastorecluster) not Found"
-                break
-            }
-            # $VMHost = Get-Cluster $Cluster | Get-VMHost -State Connected | Get-Random
-            # $CapacityKB = Get-Hardddisk -Template $VM_TO_CREATE.Template | Measure-Object -Sum | Select-Object -ExpandProperty Sum
-            # Get-Datastore --VMHost $VMHost | `
-            # ?{($_FreeSpaceMB*1mb) -gt (($CapacityKB * 1kb) *1.1)}
-            
-			#
+			$ServerListe = $ServerListe[1..($ServerListe.count)]
+
+  			#
             # start create VM from template
             #
             Write-Host "Create VM $($VM_TO_CREATE.VMName) from Template $($VM_TO_CREATE.Template)..." -NoNewLine
@@ -132,12 +156,11 @@ Function VM-DeployfromTab {
 			-Datastore $VM_TO_CREATE.datastorecluster `
 			-OSCustomizationSpec $VM_TO_CREATE.customspec `
 			-RunAsync:$true
-			# As we started the Create VM action, we remove this VM/Server from our list
-			$ServerListe = $ServerListe[1..($ServerListe.count)]
 			
 			# We better wait 2 seconds until we check the Task status
 			Start-Sleep -s 2
 			
+            # Collect CreateVM Task Details
 			$CurrentTaskStatus = Get-Task -Id $CREATEVM_TASK.Id
            	$CREATEVM_TASK_INFO = "" | Select Task, TaskId, VMName, State, PercentComplete, StartTime, FinishTime
             $CREATEVM_TASK_INFO.Task = $CurrentTaskStatus.Name
@@ -188,6 +211,14 @@ Function VM-DeployfromTab {
 				# If a VM was succesfully created, we change Network and start the VM
 				if ($CHECK_TASK_INFO.State -eq "Success") {
 					$VM = $VMsToDeploy | Where { $_.VMName -eq "$($CHECK_TASK_INFO.VMName)"}
+                    # If vCPU/vRAM is provided from csv, we change this for this VM
+                    Write-Host "Customizing VM Hardware (vCPU/vRAM)..."
+                    if ( $VM.NumvCPU -ne "" ) {
+                        Set-VM $VM.VMname -NumCpu $VM.NumvCPU -Confirm:$false
+                    }
+                    if ( $VM.vRAMGB -ne "" ) {
+                        Set-VM $VM.VMname -MemoryGB $VM.vRAMGB -Confirm:$false
+                    }
 				    Write-Host "Changing VLAN network setting for VM $($VM.VMName)..." -NoNewline
                     $FirstNetworkAdapter = Get-NetworkAdapter -VM $VM.VMname
                     Get-NetworkAdapter -VM $VM.VMname |`
