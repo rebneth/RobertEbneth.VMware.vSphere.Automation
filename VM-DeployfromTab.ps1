@@ -43,7 +43,7 @@ Function VM-DeployfromTab {
 	[Parameter(Mandatory = $False, ValueFromPipeline=$false,
 	HelpMessage = "Enter vCenter Name")]
     [Alias("vc")]
-	[string]$VCENTER = "vcenter001-betrieb-prod.hal.dbrent.net"
+	[string]$VCENTER = "vmware.vcenter.net"
    )
  
     # Check input file with list of VMs to deploy
