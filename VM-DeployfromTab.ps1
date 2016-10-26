@@ -1,32 +1,29 @@
 Function VM-DeployfromTab {
 <#
 .SYNOPSIS
-  Mass Deployment for VMware vSphere VMs
+  Mass Deployment for VMware vSphere VMs from csv input file
 .DESCRIPTION
-  Mass Deployment for VMware vSphere VMs
+  Mass Deployment for VMware vSphere VMs from csv input file
   The list of VMs that have to be deployed comes from an external csv file
-  The process contains Clone VM from Template, Setting Network, vCPU/vRAM (optional)
-  and starting the VM (optional by specifying -Start cmdlet switch)
-  
+  The process contains Clone VM from Template, Setting Network, optional vCPU/vRAM
+  and starting the VM (optional by specifying -Start cmdlet switch) 
   The csv file must contain the following fields:
   vmname,vccluster,resourcepool,vlan,template,customspec,datastorecluster,
   NumvCPU(optional, but has to be "" if not defined),vRAMGB(optional...),vmfolder
-.SYNTAX
- VM-DeployfromTab [-Start:$true] [-MAXSESSIONS [1...]] [-FILENAME <INPUTFILE>] [-VCENTER <IP/FQDN vCenter>]
- .PARAMETER Start
- .PARAMETER MAXSESSIONS
- .PARAMETER FILENAME
- .PARAMETER VCENTER
-.EXAMPLE
- VM-DeployfromTab
-.EXAMPLE
- VM-DeployfromTab -Start:$true
 .NOTES
   Release 1.0
   Robert Ebneth
   October, 26th, 2016
 .LINK
  http://github.com/rebneth
+.EXAMPLE
+ VM-DeployfromTab
+.EXAMPLE
+ VM-DeployfromTab -Start:$true
+.PARAMETER Start
+.PARAMETER MAXSESSIONS
+.PARAMETER FILENAME
+.PARAMETER VCENTER
 #>
 
 	#[CmdletBinding()]
@@ -46,7 +43,7 @@ Function VM-DeployfromTab {
 	[Parameter(Mandatory = $False, ValueFromPipeline=$false,
 	HelpMessage = "Enter vCenter Name")]
     [Alias("vc")]
-	[string]$vcenter = "vcenter001-betrieb-prod.hal.dbrent.net"
+	[string]$VCENTER = "vcenter001-betrieb-prod.hal.dbrent.net"
    )
  
     # Check input file with list of VMs to deploy
