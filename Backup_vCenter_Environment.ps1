@@ -21,7 +21,7 @@
 #>
 
 # Add personal Powershell Module Path to $PSPath environment
-$MODULE_PATH = "D:\Infos\Tools\Scripting\Powershell\VMware\PS Modules Robert"
+$MODULE_PATH = "D:\PS Modules Robert"
 $PATH_FOUND = $false
 foreach ( $MPATH in ([Environment]::GetEnvironmentVariable("PSModulePath") -split ";")) {
     # we need to make sure, that there are no leading or ending 'blank' sign to compare right
@@ -46,14 +46,14 @@ Import-Module "$MODULE_PATH\RobertEbneth.VMware.vSphere.Automation\RobertEbneth.
 if (-not $?) { break}
 # Adding PSModules that are required but Code from other
 Remove-Module PowerCLIReference.vCenter.Deployment -EA 0
-Import-Module "D:\Infos\Tools\Scripting\Powershell\VMware\PS Module PowerCLIReference\PowerCLIReference.vCenter.Deployment\PowerCLIReference.vCenter.Deployment.psd1" -Verbose
+Import-Module "D:\PS Module PowerCLIReference\PowerCLIReference.vCenter.Deployment\PowerCLIReference.vCenter.Deployment.psd1" -Verbose
 if (-not $?) { break}
 # Adding PSModules that are required but Code from other
 Remove-Module DRSRuleUtil -EA 0
-Import-Module "D:\Infos\Tools\Scripting\Powershell\VMware\PS Modules Sonstige\DRSRule-Latest\DRSRuleUtil.psd1" -Verbose
+Import-Module "D:\PS Modules Sonstige\DRSRule-Latest\DRSRuleUtil.psd1" -Verbose
 if (-not $?) { break}
 Remove-Module DRSRule -EA 0
-Import-Module "D:\Infos\Tools\Scripting\Powershell\VMware\PS Modules Sonstige\DRSRule-Latest\DRSRule.psd1" -Verbose
+Import-Module "D:\PS Modules Sonstige\DRSRule-Latest\DRSRule.psd1" -Verbose
 if (-not $?) { break}
 
 # This is for debugging: Get-Command -module vCenter_DR_functions -verb *
