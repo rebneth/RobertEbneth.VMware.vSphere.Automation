@@ -1,4 +1,5 @@
-﻿<#
+﻿function Set-VMResourcePool {
+<#
 .SYNOPSIS
   Check Resouurce Pool Setting for each VM from a vSphere Cluster
 .DESCRIPTION
@@ -7,16 +8,14 @@
   If it differs from Backup Resource Pool settings. VM will be moved
   to that Resource Pool.
 .NOTES
-
   Release 1.0
   Robert Ebneth
-  October, 17th, 2016
-
+  November, 2nd, 2016
+.LINK
+  http://github.com/rebneth
 .EXAMPLE
   Set-VMResourcePool.ps1 -Cluster <vSphere Cluster name>
 #>
-
-function Set-VMResourcePool {
 
     # We support Move of VMs to different Resource Pool only if -Confirm:$true
     [CmdletBinding(ConfirmImpact='High', SupportsShouldProcess=$true )]
@@ -108,4 +107,4 @@ Process {
         }
     }
 } ### End Process
-} ### end Function
+} ### End Function
