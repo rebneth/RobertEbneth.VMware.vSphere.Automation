@@ -1,4 +1,5 @@
-﻿<#
+﻿Function Import-vCenterResourcePools {
+<#
 .SYNOPSIS
   Import Resource Pools for vSphere Cluster
 .DESCRIPTION
@@ -6,15 +7,15 @@
 .NOTES
   Release 1.0
   Robert Ebneth
-  October, 12th, 2016
+  November, 2nd, 2016
+.LINK
+  http://github.com/rebneth
 .EXAMPLE
   Import-vCenterResourcePools -Cluster <vSphere Cluster name>
 .EXAMPLE
   Get-Cluster | Import-vCenterResourcePools
 #>
 
-
-Function Import-vCenterResourcePools {
 
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
     param(
@@ -25,9 +26,9 @@ Function Import-vCenterResourcePools {
     HelpMessage = "Overwrite DRS Settings if Resource Pool exists?")]
     [Alias("f")]
 	[switch]$Force = $false
- #  [Parameter(Mandatory = $True, ValueFromPipeline=$false, ValueFromPipelineByPropertyName=$false, Position = 1,
- #  HelpMessage = "Enter the path to the csv output file")]
- #  [string]$FILENAME
+	[Parameter(Mandatory = $True, ValueFromPipeline=$false, ValueFromPipelineByPropertyName=$false, Position = 1,
+	HelpMessage = "Enter the path to the xml input file")]
+	[string]$FILENAME
     )
 
 Begin {
@@ -39,7 +40,9 @@ Begin {
     Write-Host "# Import vCenter Resource Pools and their Structure #"
     Write-Host "#####################################################"
     $FILENAME = "$($PSScriptRoot)\vCenter_ResourcePools.xml"
-    $BackupResourcePools = Import-Clixml $FILENAME	
+    if ((Test-Path $FILENAME) -eq $False)
+		{ Write-Error "Missing Input File: $FILENAME"; break}
+	$BackupResourcePools = Import-Clixml $FILENAME	
 	}
 
 
