@@ -1,4 +1,5 @@
-﻿<#
+﻿Function Export-vCenterResourcePools {
+<#
 .SYNOPSIS
   Export Resource Pools from vSphere Cluster
   Export Location of vSphere Clusters VMs within Resource Pools
@@ -12,23 +13,26 @@
 .NOTES
   Release 1.0
   Robert Ebneth
-  October, 10th, 2016
+  November, 2nd, 2016
+.LINK
+  http://github.com/rebneth
 .EXAMPLE
   Export-vCenterResourcePools -Cluster <vSphere Cluster name>
 .EXAMPLE
   Get-Cluster | Export-vCenterResourcePools
 #>
 
-Function Export-vCenterResourcePools {
-
     [CmdletBinding()]
     param(
     [Parameter(Mandatory = $True, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Position = 0,
     HelpMessage = "Enter Name of vCenter Cluster")]
-    [string]$Cluster
- #  [Parameter(Mandatory = $True, ValueFromPipeline=$false, ValueFromPipelineByPropertyName=$false, Position = 1,
- #  HelpMessage = "Enter the path to the csv output file")]
- #  [string]$FILENAME
+    [string]$Cluster,
+	[Parameter(Mandatory = $False, ValueFromPipeline=$false, Position = 1,
+	HelpMessage = "Enter the path to the xml output file")]
+	[string]$FILENAME1 = "$($PSScriptRoot)\vCenter_ResourcePools.xml",
+	[Parameter(Mandatory = $False, ValueFromPipeline=$false, Position = 2,
+	HelpMessage = "Enter the path to the csv output file")]
+	[string]$FILENAME2 = "$($PSScriptRoot)\vCenter_VMResourcePoolLocation.csv"
     )
 
 Begin {
@@ -92,12 +96,9 @@ Process {
 } ### End Process
 
 End {
-    $FILENAME = "$($PSScriptRoot)\vCenter_ResourcePools.xml"
-    Write-Host "Writing File $($FILENAME)..."
-    $AllResourcePools | Export-Clixml $FILENAME
-
-    $FILENAME = "$($PSScriptRoot)\vCenter_VMResourcePoolLocation.csv"
-    Write-Host "Writing File $($FILENAME)..."
-    $AllVMsResourcePoolPath | Select VMname, ResourcePoolPath | Export-Csv $FILENAME -NoTypeInformation
+    Write-Host "Writing File $($FILENAME1)..."
+    $AllResourcePools | Export-Clixml $FILENAME1
+    Write-Host "Writing File $($FILENAME2)..."
+    $AllVMsResourcePoolPath | Select VMname, ResourcePoolPath | Export-Csv $FILENAME2 -NoTypeInformation
 } ### End End
 } ### End Function
