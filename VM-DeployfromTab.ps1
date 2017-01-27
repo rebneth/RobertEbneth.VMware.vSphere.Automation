@@ -13,7 +13,7 @@ Function VM-DeployfromTab {
 .NOTES
   Release 1.0
   Robert Ebneth
-  October, 26th, 2016
+  January, 24th, 2017
 .LINK
  http://github.com/rebneth
 .EXAMPLE
@@ -43,7 +43,7 @@ Function VM-DeployfromTab {
 	[Parameter(Mandatory = $False, ValueFromPipeline=$false,
 	HelpMessage = "Enter vCenter Name")]
     [Alias("vc")]
-	[string]$VCENTER = "vmware.vcenter.net"
+	[string]$VCENTER = "vcenter001-betrieb-prod.hal.dbrent.net"
    )
  
     # Check input file with list of VMs to deploy
@@ -53,7 +53,7 @@ Function VM-DeployfromTab {
     # Load VMware PS Core Module/SnapIn
     if (-not (Get-PSSnapin VMware.VimAutomation.Core -ErrorAction SilentlyContinue)) {
         Add-PSSnapin VMware.VimAutomation.Core }
-    # We need VMware Module VMware.VimAutomation.Core (Get-VDPortgroup)
+    # We need VMware Module VMware.VimAutomation.Vds (Get-VDPortgroup)
     if(-not(Get-Module -name VMware.VimAutomation.Vds ))
         { Import-Module VMware.VimAutomation.Vds -ErrorAction SilentlyContinue }
 
@@ -239,7 +239,7 @@ Function VM-DeployfromTab {
                     if ($? -eq $True) {
                         write-host "successfull" -ForegroundColor Green
                         if ($Start -eq $true) { Write-Host "Starting VM $($VM.VMname)..."
-                                            Start-VM -Name $VM.VMname }
+                                            Start-VM -VM $VM.VMname }
                         }
                       else {
                         write-host "FAILED" -ForegroundColor Red
