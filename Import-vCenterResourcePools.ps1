@@ -5,11 +5,11 @@
 .DESCRIPTION
   Import Resource Pools for vSphere Cluster
 .NOTES
-  Release 1.0
+  Release 1.1
   Robert Ebneth
-  November, 2nd, 2016
+  February, 9th, 2017
 .LINK
-  http://github.com/rebneth
+  http://github.com/rebneth/RobertEbneth.VMware.vSphere.Automation
 .EXAMPLE
   Import-vCenterResourcePools -Cluster <vSphere Cluster name>
 .EXAMPLE
@@ -17,8 +17,8 @@
 #>
 
 
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-    param(
+[CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
+param(
     [Parameter(Mandatory = $True, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Position = 0,
     HelpMessage = "Enter Name of vCenter Cluster")]
     [string]$Cluster,
@@ -29,7 +29,7 @@
 	[Parameter(Mandatory = $True, ValueFromPipeline=$false, ValueFromPipelineByPropertyName=$false, Position = 1,
 	HelpMessage = "Enter the path to the xml input file")]
 	[string]$FILENAME
-    )
+)
 
 Begin {
 	#$OUTPUTFILENAME = CheckFilePathAndCreate VMPowerState.csv $FILENAME
@@ -130,3 +130,35 @@ foreach ( $RP in $AllResourcePools ) {
 
 } ### End Process
 } ### End Function
+# SIG # Begin signature block
+# MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
+# gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUPKPISLj0l8EpsSD3maT9rjbX
+# DeagggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
+# HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
+# cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
+# DwAwggEKAoIBAQCdqdh2MLNnST7h2crQ7CeJG9zXfPv14TF5v/ZaO8yLmYkJVsz1
+# tBFU5E1aWhTM/fk0bQo0Qa4xt7OtcJOXf83RgoFvo4Or2ab+pKSy3dy8GQ5sFpOt
+# NsvLECxycUV/X/qpmOF4P5f4kHlWisr9R6xs1Svf9ToktE82VXQ/jgEoiAvmUuio
+# bLLpx7/i6ii4dkMdT+y7eE7fhVsfvS1FqDLStB7xyNMRDlGiITN8kh9kE63bMQ1P
+# yaCBpDegi/wIFdsgoSMki3iEBkiyF+5TklatPh25XY7x3hCiQbgs64ElDrjv4k/e
+# WJKyiow3jmtzWdD+xQJKT/eqND5jHF9VMqLNAgMBAAGjRjBEMBMGA1UdJQQMMAoG
+# CCsGAQUFBwMDMA4GA1UdDwEB/wQEAwIHgDAdBgNVHQ4EFgQUXJLKHJBzYZdTDg9Z
+# QMC1/OLMbxUwDQYJKoZIhvcNAQEFBQADggEBAGcRyu0x3vL01a2+GYU1n2KGuef/
+# 5jhbgXaYCDm0HNnwVcA6f1vEgFqkh4P03/7kYag9GZRL21l25Lo/plPqgnPjcYwj
+# 5YFzcZaCi+NILzCLUIWUtJR1Z2jxlOlYcXyiGCjzgEnfu3fdJLDNI6RffnInnBpZ
+# WdEI8F6HnkXHDBfmNIU+Tn1znURXBf3qzmUFsg1mr5IDrF75E27v4SZC7HMEbAmh
+# 107gq05QGvADv38WcltjK1usKRxIyleipWjAgAoFd0OtrI6FIto5OwwqJxHR/wV7
+# rgJ3xDQYC7g6DP6F0xYxqPdMAr4FYZ0ADc2WsIEKMIq//Qg0rN1WxBCJC/QxggHe
+# MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
+# dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
+# DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUGt06KbKHTVbi
+# UUMXeDGm/1xSfCkwDQYJKoZIhvcNAQEBBQAEggEAZXsVPF6fliQ8JmZEvlDAb4JM
+# AzSD8WnIk22Wx5L26dE5KZTR6Y25Y2i0vDM25YYNVINC3fUakOPfNIEwsrJN+CoL
+# qZU+cayEeOC64nUPcvat7EHnbSkRJ2ojQw8ZG54jplTjsseb3Jhslgv83ipofscT
+# +CAg5v0IX0WkWGoSgMNJ1hHbJMh9bI0GNQo5VrFvflqvGCjLzGi8Mg/rl0dt6Zop
+# JWGeeAXoDX79iyygdOSdcgoQRLkEwREoHTscHPWWRZVG/aWyBrbG4ZndEkjBtMCt
+# A3AkK3JXA0VNKlGkmU+agaLFFE5DERmF00Wu/AdPNuurlM23GrijBNVTCD3UTw==
+# SIG # End signature block
