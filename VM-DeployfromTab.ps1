@@ -11,9 +11,9 @@ Function VM-DeployfromTab {
   vmname,vccluster,resourcepool,vlan,template,customspec,datastorecluster,
   NumvCPU(optional, but has to be "" if not defined),vRAMGB(optional...),vmfolder
 .NOTES
-  Release 1.0
+  Release 1.1
   Robert Ebneth
-  January, 24th, 2017
+  February, 9th, 2017
 .LINK
  http://github.com/rebneth
 .EXAMPLE
@@ -26,8 +26,8 @@ Function VM-DeployfromTab {
 .PARAMETER VCENTER
 #>
 
-	#[CmdletBinding()]
-	param(
+#[CmdletBinding()]
+param(
     # We expect the default input file rollout.csv in the same directory as the script
 	[Parameter(Mandatory = $False, ValueFromPipeline=$false,
 	HelpMessage = "Enter the path to the csv input file")]
@@ -43,8 +43,8 @@ Function VM-DeployfromTab {
 	[Parameter(Mandatory = $False, ValueFromPipeline=$false,
 	HelpMessage = "Enter vCenter Name")]
     [Alias("vc")]
-	[string]$VCENTER = "vcenter001-betrieb-prod.hal.dbrent.net"
-   )
+	[string]$VCENTER
+)
  
     # Check input file with list of VMs to deploy
     if ((Test-Path $FILENAME) -eq $False)
@@ -267,3 +267,36 @@ Function VM-DeployfromTab {
 		    Disconnect-VIServer -Server $vcenter -Confirm:$false}
 
 } ### End Function
+
+# SIG # Begin signature block
+# MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
+# gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUqlYegN45rhIlNuf43/9AsHGC
+# AVegggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
+# HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
+# cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
+# DwAwggEKAoIBAQCdqdh2MLNnST7h2crQ7CeJG9zXfPv14TF5v/ZaO8yLmYkJVsz1
+# tBFU5E1aWhTM/fk0bQo0Qa4xt7OtcJOXf83RgoFvo4Or2ab+pKSy3dy8GQ5sFpOt
+# NsvLECxycUV/X/qpmOF4P5f4kHlWisr9R6xs1Svf9ToktE82VXQ/jgEoiAvmUuio
+# bLLpx7/i6ii4dkMdT+y7eE7fhVsfvS1FqDLStB7xyNMRDlGiITN8kh9kE63bMQ1P
+# yaCBpDegi/wIFdsgoSMki3iEBkiyF+5TklatPh25XY7x3hCiQbgs64ElDrjv4k/e
+# WJKyiow3jmtzWdD+xQJKT/eqND5jHF9VMqLNAgMBAAGjRjBEMBMGA1UdJQQMMAoG
+# CCsGAQUFBwMDMA4GA1UdDwEB/wQEAwIHgDAdBgNVHQ4EFgQUXJLKHJBzYZdTDg9Z
+# QMC1/OLMbxUwDQYJKoZIhvcNAQEFBQADggEBAGcRyu0x3vL01a2+GYU1n2KGuef/
+# 5jhbgXaYCDm0HNnwVcA6f1vEgFqkh4P03/7kYag9GZRL21l25Lo/plPqgnPjcYwj
+# 5YFzcZaCi+NILzCLUIWUtJR1Z2jxlOlYcXyiGCjzgEnfu3fdJLDNI6RffnInnBpZ
+# WdEI8F6HnkXHDBfmNIU+Tn1znURXBf3qzmUFsg1mr5IDrF75E27v4SZC7HMEbAmh
+# 107gq05QGvADv38WcltjK1usKRxIyleipWjAgAoFd0OtrI6FIto5OwwqJxHR/wV7
+# rgJ3xDQYC7g6DP6F0xYxqPdMAr4FYZ0ADc2WsIEKMIq//Qg0rN1WxBCJC/QxggHe
+# MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
+# dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
+# DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUbnwli4yVAG/E
+# KZjiSJ5kBDx29IYwDQYJKoZIhvcNAQEBBQAEggEAAdlAEfCff4gVwTR18XDd6wkf
+# KttnMydkDM1KMkFJmEA+kvT+NSkrRVuSC4N1ZHs8IDu9d9OCccYVTdjcBLhpxNm7
+# AyRQr/k6Ro1ZWfSiZDauIAaKxphuzhvgTyJbRKiqARnZwy3KTu4iAuLM9LHNgi+b
+# YoWGgIjfy440l+N9hgOx7c5VzFYU6zLmxW/4EQs4U4G9Zi9oBImmRpnMDJJGa2ZL
+# OSEXKIRmzqGyb+Jb0iOnlGPlGMnx2tZITZWDMABR+R2Ep3T61/lKL2NoZq6Y5uaY
+# r9dCtphUFSDyhblsIyqImL0akaiJmmoNJTkLnjmjDvL2TBqIAABy8zsmKpo3SA==
+# SIG # End signature block
