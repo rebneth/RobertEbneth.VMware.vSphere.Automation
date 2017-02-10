@@ -29,10 +29,10 @@ param(
     [string]$Cluster,
 	[Parameter(Mandatory = $False, ValueFromPipeline=$false, Position = 1,
 	HelpMessage = "Enter the path to the xml output file")]
-	[string]$FILENAME1 = "$($PSScriptRoot)\vCenter_ResourcePools.xml",
+	[string]$FILENAME1 = "$($env:USERPROFILE)\vCenter_ResourcePools.xml",
 	[Parameter(Mandatory = $False, ValueFromPipeline=$false, Position = 2,
 	HelpMessage = "Enter the path to the csv output file")]
-	[string]$FILENAME2 = "$($PSScriptRoot)\vCenter_VMResourcePoolLocation.csv"
+	[string]$FILENAME2 = "$($env:USERPROFILE)\vCenter_VMResourcePoolLocation.csv"
 )
 
 Begin {
@@ -105,8 +105,8 @@ End {
 # SIG # Begin signature block
 # MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUb2x6/CF1zCABr5lgwYtQc4xL
-# l4qgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUVMhcG9eNUiO+SVG/LDXQYDWM
+# ERugggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
 # AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
 # HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
 # cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
@@ -126,11 +126,11 @@ End {
 # MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
 # dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
 # DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUkPskDt/LnTuI
-# ZJdETpO7inArlTwwDQYJKoZIhvcNAQEBBQAEggEAG3b3Xc8b3GzdkGOUb629ysq2
-# 7tqhbfXXfY6W9R60hSphJ+Ttd1BVclwJyU0qn3F8O/VyyrjNju4CkkGlXViqZRFo
-# 0RDV/MYmDjX9egYQO6IFTifg9HGIuguqBbUhC+RXkPPHesvsJJLMueJgzpc9VnQL
-# llmNHr09v6LbGmekvztVLoCMBQxMEvNAD3Jk3cwSAEIX1KhhiTaw6Jnymh3wijPy
-# dBDoVKK+Tf/wBN2bUe+fnMFyWBm1FBYU6pxWOqorYkzK5jdXnCdL1u+EwV3b1f2w
-# w0QsasxMBEzPMRQxvRlFUG72lf2w6uQ8DbFzEtIsj52tcPPFlY5tuWXj24TRfQ==
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUgS+2pXCUPXrT
+# Hv3b4z2uBxIi87MwDQYJKoZIhvcNAQEBBQAEggEALxangiMvnyiD2+XSDz462Zf+
+# rea218xSJPiKmgxyTER9zxDoMG51exBS5ZRcyo4qGthl0YAosdFUSZfUvTZyfsE+
+# RKZHbp81yfgoW6y8+2KoLVkA7ZG44kJPObp6u3bHG2wn05eanNfiX57Tx47zP/WE
+# /ZRUOXvscQ3hSu6CGPHAkarG8vAPb2Hie2i2W6VwGqgRKjwnfEZ4t7Rd14vaEC+r
+# yAmwKOEmmMx3LgVr/lemdErs+NN/qMGMMfVVdFvH2WX2L6DwNzkzm4DqH88GIpDl
+# ve37c0TD1oN4OHtaB8eADNQF10o+0dtqo5+cMO3EWynZIM+nwv2lKwHe2tDJsw==
 # SIG # End signature block

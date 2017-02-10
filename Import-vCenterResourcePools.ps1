@@ -28,7 +28,7 @@ param(
 	[switch]$Force = $false
 	[Parameter(Mandatory = $True, ValueFromPipeline=$false, ValueFromPipelineByPropertyName=$false, Position = 1,
 	HelpMessage = "Enter the path to the xml input file")]
-	[string]$FILENAME
+	[string]$FILENAME = "$($env:USERPROFILE)\vCenter_ResourcePools.xml"
 )
 
 Begin {
@@ -133,8 +133,8 @@ foreach ( $RP in $AllResourcePools ) {
 # SIG # Begin signature block
 # MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUPKPISLj0l8EpsSD3maT9rjbX
-# DeagggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUC/gBBlaKAn/ZkxEOHO3eRd2z
+# +tWgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
 # AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
 # HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
 # cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
@@ -154,11 +154,11 @@ foreach ( $RP in $AllResourcePools ) {
 # MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
 # dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
 # DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUGt06KbKHTVbi
-# UUMXeDGm/1xSfCkwDQYJKoZIhvcNAQEBBQAEggEAZXsVPF6fliQ8JmZEvlDAb4JM
-# AzSD8WnIk22Wx5L26dE5KZTR6Y25Y2i0vDM25YYNVINC3fUakOPfNIEwsrJN+CoL
-# qZU+cayEeOC64nUPcvat7EHnbSkRJ2ojQw8ZG54jplTjsseb3Jhslgv83ipofscT
-# +CAg5v0IX0WkWGoSgMNJ1hHbJMh9bI0GNQo5VrFvflqvGCjLzGi8Mg/rl0dt6Zop
-# JWGeeAXoDX79iyygdOSdcgoQRLkEwREoHTscHPWWRZVG/aWyBrbG4ZndEkjBtMCt
-# A3AkK3JXA0VNKlGkmU+agaLFFE5DERmF00Wu/AdPNuurlM23GrijBNVTCD3UTw==
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUdIBbi/2uc7of
+# foFtQZxDq3Tmf/AwDQYJKoZIhvcNAQEBBQAEggEAhwjNVIVA4AATe/kcYSrdGF89
+# THI2dHOxs4gYmuemTe11cqn/NL4xMihC1hj+bEt8wSq9uCyf2IAgyQ4tbxU3gFnV
+# 5WhluTTuJ1JJlmgl084HT9SKzMkIUqBK+Mz1kvFn4lq4f2kWqLcPAHJXBIBAHiPu
+# wpF/JgEezs3mxmTpkRK+SrHEKadgtkbe06BWEPiDDbURVfMr0YxGb3NfEAG+GhuI
+# 4a/yIT6dYjVIzg4TAQufXcBKHXXVHDU/zy5QrPeLB3G0GgfdPUtZJcbhkn9hJzwV
+# N1dSmdm+VYK2Ir4gKXziymYwVFXJtOsPu7m+6cjopVZto+RDcEsLhhaRvzD0Xw==
 # SIG # End signature block
