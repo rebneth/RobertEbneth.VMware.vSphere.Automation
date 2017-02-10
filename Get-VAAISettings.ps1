@@ -21,7 +21,10 @@ param(
 	[Parameter(Mandatory = $True, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Position = 0,
 	HelpMessage = "Enter Name of vCenter Cluster")]
 	[Alias("c")]
-	[string]$CLUSTER
+	[string]$CLUSTER,
+    [Parameter(Mandatory = $False, Position = 1)]
+    [alias("f")]
+    [string]$FILENAME = "$($env:USERPROFILE)\ESXi_VAAI_Settings_$(get-date -f yyyy-MM-dd-HH-mm-ss).csv"
 )
 
 
@@ -29,6 +32,7 @@ Begin {
     if (-not (Get-PSSnapin VMware.VimAutomation.Core -ErrorAction SilentlyContinue)) {
         Add-PSSnapin VMware.VimAutomation.Core
     }
+    $OUTPUTFILENAME = CheckFilePathAndCreate "$FILENAME"
     $report = @()
 } ### End Begin
 
@@ -41,7 +45,8 @@ Process {
     }
     $ClusterHosts = Get-Cluster -Name $Cluster | Get-VMHost | Sort Name | Select Name
     foreach ($ESXiHost in $ClusterHosts ) {
-        $VAAISettings = "" | Select ESXiHost, VMFS3.HardwareAcceleratedLocking, DataMover.HardwareAcceleratedInit, DataMover.HardwareAcceleratedMove
+        $VAAISettings = "" | Select Cluster, ESXiHost, VMFS3.HardwareAcceleratedLocking, DataMover.HardwareAcceleratedInit, DataMover.HardwareAcceleratedMove
+        $VAAISettings.Cluster = $Cluster
         $VAAISettings.ESXiHost = $ESXiHost.Name
         $CurrentVAAISettings = Get-VMHost $ESXiHost.Name |Get-AdvancedSetting | Where { $_.Name -Like "*Accelerated*"} | Sort Name
         $VAAISettings."DataMover.HardwareAcceleratedInit" = $CurrentVAAISettings[0].Value
@@ -52,15 +57,17 @@ Process {
 } ### End Process
 
 End {
-    $report | Format-Table -AutoSize
+    $report | Sort Cluster, ESXiHost | Format-Table -AutoSize
+    Write-Host "Writing Outputfile $($OUTPUTFILENAME)..."
+    $report | Sort Cluster, ESXiHost | Export-csv -Delimiter ";" $OUTPUTFILENAME -noTypeInformation
 } ### End End
 
 } ### End Function
 # SIG # Begin signature block
 # MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUUyGEsdTv+5ARwl5QAjlCGOkH
-# eWugggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUagl2Ufyx5TUa19P6JFdrhXNH
+# qn2gggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
 # AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
 # HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
 # cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
@@ -80,11 +87,11 @@ End {
 # MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
 # dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
 # DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUQPDevMJoIJjc
-# nfBAKIwiVXChOWIwDQYJKoZIhvcNAQEBBQAEggEAEqjeJeU4xrOLKWRqnHocQRAa
-# JY3K1t4g9MqE5NTlAMP5Kazrj3/IFmZqygs/VoukP0f4g0RWedQ5lNPfHjv1yVaR
-# coLcX/w8fo9KQBZR4Z5jVzjee5FBif9LpnKvup9J93Ez0kj6Z/NYOG6StgYz0CS0
-# SEE5ZPPJBV/jQ8QQBACtNxSJsZ/JRI+wBSdaQ8Bx1mK7ff7aee59CUc7yr1FSc0e
-# hqsxqdrlYbPFr4/WYz/Ar27qx/7L8+l27jmCrSKwVMV+Zjgbv2Pq7vKtKtcFlcXK
-# jnOxCEWX57sGf93U4LXrvcIdThkTyLr+1tRzCq0cYdsOMMVtgKGQs0U7QQaBQQ==
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUlRbALrhRmavC
+# IlxvYJtVfgWvD6MwDQYJKoZIhvcNAQEBBQAEggEATa4IqQUpLFJMEpHU41ox1Ku6
+# T8nRNEFl7/DN7o1lOCI051gUShKniJRdX0vJjNldu388TRLveFYffyDtC5EBlauB
+# 3BjduXpBuLxDqhVmN5X7kB7EURufDjyH6n8B8LyvBtCx3oZpNR4n1/qpcMJ9n651
+# XJ/mNBl+d/hMXAHNS8QWDoAKnKMr5bAvnYFA3mk4YTys5ICVqtD9xe8ySIgqYpMP
+# xVss5IqQwjfPFH55sEJjb4eRyDLqLrgY2wn8Wnt7Zf4oLaKlR7E+M/JqRU1lH87D
+# kC7k7APNG51ZYGBc0StPoEFFVJGqba0hQzPIN2RTtDv8F5JiMxrubBJwaal5gw==
 # SIG # End signature block

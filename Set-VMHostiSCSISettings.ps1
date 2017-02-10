@@ -9,13 +9,13 @@
   New iSCSI Target Bindings for the ESXi Host will be added.
   PowerCLI Session must be connected to vCenter Server using Connect-VIServer
 .NOTES
-  Release 1.0
+  Release 1.1
   Robert Ebneth
-  November, 25rd, 2016
+  February, 10th
 .LINK
-  http://github.com/rebneth
-.PARAMETER VMHosts
-  Name
+  http://github.com/rebneth/RobertEbneth.VMware.vSphere.Automation
+.PARAMETER Name
+  Name VMHost
 .PARAMETER targets
   allows the following Syntaxes
   "10.202.1.101", "10.202.1.103", "10.202.2.102"
@@ -27,23 +27,33 @@
   Get-Cluster | Get-VMhost | Sort Name | Set-VMHostiSCSISettings -targets 1.1.1.1, 2.2.2.2
  #>
 [CmdletBinding(ConfirmImpact='High', SupportsShouldProcess=$true )]
- param(
-   [Parameter(Mandatory = $True,
-   ValueFromPipeline=$True,
-   ValueFromPipelineByPropertyName=$true,
-   HelpMessage = "Enter Name of ESXi Host")]
-   [string]$Name,
-   [Parameter(Mandatory = $True,
-   ValueFromPipeline=$False,
-   HelpMessage = "Enter iSCSI Target(s)")]
-   [string[]]$targets
+param(
+	[Parameter(Mandatory = $True,
+	ValueFromPipeline=$True,
+	ValueFromPipelineByPropertyName=$true,
+	HelpMessage = "Enter Name of ESXi Host")]
+	[string]$Name,
+	[Parameter(Mandatory = $True,
+	ValueFromPipeline=$False,
+	HelpMessage = "Enter iSCSI Target(s)")]
+	[string[]]$targets,
+	[Parameter(Mandatory = $False, ValueFromPipeline=$false, Position = 2)] 
+	[Alias("d")]
+	[String]$DelayedAck = "false",
+	[Parameter(Mandatory = $False, ValueFromPipeline=$false, Position = 3)]
+	[ValidateRange(0,30)] 
+	[Alias("n")]
+	[int]$NoopTimeout = "30",
+	[Parameter(Mandatory = $False, ValueFromPipeline=$false, Position = 4)]
+	[ValidateRange(0,60)] 
+	[Alias("l")]
+	[int]$LoginTimeout = "60"
 )
 
 Begin {
 }
 
 Process {
-
     # We have to split multiple IP-Adresses separated by ; , or ' '
     $targets = $targets.split(",")
     $targets = $targets.split(";")
@@ -108,6 +118,33 @@ Process {
             }                
         } ### End foreach
     } ### End foreach
+
+    ###
+    ### At this point we Check/set important iSCSI params according Best practices
+    ###
+    ### $esxcli.iscsi.adapter.set(string adapter, string alias, string name)
+    $esxcli = Get-EsxCli -VMHost $VMHost
+    $iscsi_hba = Get-VMHost $VMHost | Get-VMHostHba -Type iScsi | Where {$_.Model -eq "iSCSI Software Adapter"}
+    $AdvancedOptions = $iscsi_hba.ExtensionData.AdvancedOptions
+    $Current_DelayedAck = $AdvancedOptions | ?{$_.Key -eq "DelayedAck" } | Select-Object -ExpandProperty Value
+	$Current_LoginTimeout = $AdvancedOptions | ?{$_.Key -eq "LoginTimeout" } | Select-Object -ExpandProperty Value
+	$Current_NoopTimeout = $AdvancedOptions | ?{$_.Key -eq "NoopTimeout" } | Select-Object -ExpandProperty Value
+    if ( "$Current_DelayedAck" -notLike "$DelayedAck" ) { 
+        write-Host "Setting ESXi Host $VMHost iSCSI SW Adapter $hba Advanced Parameter DelayedAck to $false"
+        $esxcli.iscsi.adapter.param.set($iscsi_hba, $null, 'DelayedAck', "$DelayedAck")}
+      else
+        { Write-Host "iSCSI HBA Advanced Parameter DelayedAck already set to $($DelayedAck). Nothing Changed." -ForegroundColor Green }
+    if ( "$Current_NoopTimeout" -notLike "$NoopTimeout" ) { 
+        write-Host "Setting ESXi Host $VMHost iSCSI SW Adapter $hba Advanced Parameter NoopTimeout to $NoopTimeout"
+        $esxcli.iscsi.adapter.param.set($iscsi_hba, $false, 'NoopTimeout', "$NoopTimeout")}
+      else
+        { Write-Host "iSCSI HBA Advanced Parameter NoopTimeout already set to $($NoopTimeout). Nothing Changed." -ForegroundColor Green }
+
+    if ( "$Current_LoginTimeout" -notLike "$LoginTimeout" ) { 
+        write-Host "Setting ESXi Host $VMHost iSCSI SW Adapter $hba Advanced Parameter LoginTimeout to $LoginTimeout"
+        $esxcli.iscsi.adapter.param.set($iscsi_hba, $false, 'LoginTimeout', "$LoginTimeout")}
+      else
+        { Write-Host "iSCSI HBA Advanced Parameter LoginTimeout already set to $($LoginTimeout). Nothing Changed." -ForegroundColor Green }
   
     ###
     ### At the end we do a Rescan on all HBAs and then a Rescan for VMFS volumes
@@ -120,3 +157,36 @@ Process {
   } ### End Process
 
 } ### End Function
+
+# SIG # Begin signature block
+# MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
+# gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUo6mF/dzhY2pUXT9ssXyRXo2M
+# 1+CgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
+# HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
+# cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
+# DwAwggEKAoIBAQCdqdh2MLNnST7h2crQ7CeJG9zXfPv14TF5v/ZaO8yLmYkJVsz1
+# tBFU5E1aWhTM/fk0bQo0Qa4xt7OtcJOXf83RgoFvo4Or2ab+pKSy3dy8GQ5sFpOt
+# NsvLECxycUV/X/qpmOF4P5f4kHlWisr9R6xs1Svf9ToktE82VXQ/jgEoiAvmUuio
+# bLLpx7/i6ii4dkMdT+y7eE7fhVsfvS1FqDLStB7xyNMRDlGiITN8kh9kE63bMQ1P
+# yaCBpDegi/wIFdsgoSMki3iEBkiyF+5TklatPh25XY7x3hCiQbgs64ElDrjv4k/e
+# WJKyiow3jmtzWdD+xQJKT/eqND5jHF9VMqLNAgMBAAGjRjBEMBMGA1UdJQQMMAoG
+# CCsGAQUFBwMDMA4GA1UdDwEB/wQEAwIHgDAdBgNVHQ4EFgQUXJLKHJBzYZdTDg9Z
+# QMC1/OLMbxUwDQYJKoZIhvcNAQEFBQADggEBAGcRyu0x3vL01a2+GYU1n2KGuef/
+# 5jhbgXaYCDm0HNnwVcA6f1vEgFqkh4P03/7kYag9GZRL21l25Lo/plPqgnPjcYwj
+# 5YFzcZaCi+NILzCLUIWUtJR1Z2jxlOlYcXyiGCjzgEnfu3fdJLDNI6RffnInnBpZ
+# WdEI8F6HnkXHDBfmNIU+Tn1znURXBf3qzmUFsg1mr5IDrF75E27v4SZC7HMEbAmh
+# 107gq05QGvADv38WcltjK1usKRxIyleipWjAgAoFd0OtrI6FIto5OwwqJxHR/wV7
+# rgJ3xDQYC7g6DP6F0xYxqPdMAr4FYZ0ADc2WsIEKMIq//Qg0rN1WxBCJC/QxggHe
+# MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
+# dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
+# DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQU/eVHQgst74Di
+# NarCMKZmDg1W5E8wDQYJKoZIhvcNAQEBBQAEggEABQu4Ct0dES9nNjExmqr2Z/op
+# CY0HKWo7pDVzKWg9e20GboD2hufXC8b1B2p15IPS9Et13opVmZ97JliHNuWOZ7ge
+# XKAYK3ReUOhKSkpKLLclC9vjPo2ptYBXl0A86pjQ4meamNo7t9NcUziiD/TF8IgB
+# XPPpvyC9CmXjBwVA9fXyTf6KLx9FvSdKcd8ADx/CPDFQC0KkFt9MEYI4Hwvk2wxm
+# xGiz/tW3ChkH7+IZMGrxTMK8nwZVfAHYgysGNBZ6xWCMDwqrDtH9FYQLaw6z+YyH
+# +Gs3Cdv/8ybDoQ8glvhvlzP1dBLP/5ugpl7KJ7b6Zj0AhYye3udlGhvW1J+Dsw==
+# SIG # End signature block
