@@ -13,17 +13,24 @@ Function VM-DeployfromTab {
 .NOTES
   Release 1.1
   Robert Ebneth
-  February, 9th, 2017
+  February, 14th, 2017
 .LINK
- http://github.com/rebneth
+  http://github.com/rebneth/RobertEbneth.VMware.vSphere.Automation
+.PARAMETER FILENAME
+  Name of csv based input file for the VMs to be created from template
+  Default: $($PSScriptRoot)\rollout.csv
+.PARAMETER MAXSESSIONS
+  Specifies how much VMs will be created in parallel.
+  To avoid too many iops on storage array
+  Default: 2
+.PARAMETER Start
+  Specifies if the VM should be PoweredOn after cloning from template
+  Default: false
+.PARAMETER VCENTER
 .EXAMPLE
  VM-DeployfromTab
 .EXAMPLE
  VM-DeployfromTab -Start:$true
-.PARAMETER Start
-.PARAMETER MAXSESSIONS
-.PARAMETER FILENAME
-.PARAMETER VCENTER
 #>
 
 #[CmdletBinding()]
@@ -56,7 +63,6 @@ param(
     # We need VMware Module VMware.VimAutomation.Vds (Get-VDPortgroup)
     if(-not(Get-Module -name VMware.VimAutomation.Vds ))
         { Import-Module VMware.VimAutomation.Vds -ErrorAction SilentlyContinue }
-
     #On demand: asking the admin for vcenter credentials at each run of the script
     if(!$defaultVIServer.IsConnected){
 		$credential = Get-Credential -Message "Enter Credentials for $vcenter" -UserName "yourusername@vsphere6.local"
@@ -271,8 +277,8 @@ param(
 # SIG # Begin signature block
 # MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUqlYegN45rhIlNuf43/9AsHGC
-# AVegggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUu0oj46a1IGX2UNKuRxwp/Hpi
+# ntCgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
 # AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
 # HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
 # cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
@@ -292,11 +298,11 @@ param(
 # MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
 # dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
 # DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUbnwli4yVAG/E
-# KZjiSJ5kBDx29IYwDQYJKoZIhvcNAQEBBQAEggEAAdlAEfCff4gVwTR18XDd6wkf
-# KttnMydkDM1KMkFJmEA+kvT+NSkrRVuSC4N1ZHs8IDu9d9OCccYVTdjcBLhpxNm7
-# AyRQr/k6Ro1ZWfSiZDauIAaKxphuzhvgTyJbRKiqARnZwy3KTu4iAuLM9LHNgi+b
-# YoWGgIjfy440l+N9hgOx7c5VzFYU6zLmxW/4EQs4U4G9Zi9oBImmRpnMDJJGa2ZL
-# OSEXKIRmzqGyb+Jb0iOnlGPlGMnx2tZITZWDMABR+R2Ep3T61/lKL2NoZq6Y5uaY
-# r9dCtphUFSDyhblsIyqImL0akaiJmmoNJTkLnjmjDvL2TBqIAABy8zsmKpo3SA==
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUE/lca201fJ6w
+# nfML3463AxF1NI4wDQYJKoZIhvcNAQEBBQAEggEAWg6txT+wruQdZJ8MDQezHGXd
+# P/9tSJ91zd+K8oLevwH/3i2dTAuQoUm+yUFleNpErnyWrnscivjz68RZqRMvXvlO
+# 5WN9PTPlgBRYfnI0AcRvpAYRWVgTOv5NtKaiiH9imSyDER7fac4x1bEej2cO4m7e
+# J4mZWzrE0kFexZT8OETNLFld3FaigC5eTBBjY5RYF/8L5rtGklPbeLGkWsLXKNSg
+# l+1Op0GZbR/xlsjdYcf71GQnOiSyEYBaQ8DnmfsdaoS96VNMevFRjbgJn8pshf39
+# OXNkKYbXaaUfkDoqVIPTuTkhOLgYmQG1DPI+4Tb8u+0Vm6mD4+7zjx0nK9gogg==
 # SIG # End signature block

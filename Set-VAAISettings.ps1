@@ -7,9 +7,21 @@ function Set-VAAISettings {
 .NOTES
   Release 1.1
   Robert Ebneth
-  February, 9th, 2017
+  February, 14th, 2017
 .LINK
   http://github.com/rebneth/RobertEbneth.VMware.vSphere.Automation
+.PARAMETER Cluster
+  Selects only ESXi servers from this vSphere Cluster. If nothing is specified,
+  all vSphere Clusters will be taken.
+.PARAMETER ATS
+  VAAI Parameter ATS (Hardware Assisted Locking = SCSI Reservation Lock)
+  Default: 1 (Enabled)
+.Parameter WRITESAME
+  VAAI Parameter WRITESAME Offload (Block Zeroing within Storage Array) 
+  Default: 0 (Disabled)
+.Parameter XCOPY
+  VAAI Parameter XCOPY (Full Copy - accellerates Cloning / Storage vMotion)
+  Default: 0 (Disabled)
 .EXAMPLE
   Get-VAAISettings -Cluster <vSphere Cluster Name> -ATS 0 -WRITESAME 0 -XCOPY 0
 .EXAMPLE
@@ -39,6 +51,7 @@ function Set-VAAISettings {
 
 
 Begin {
+	# Check and if not loaded add powershell snapin
     if (-not (Get-PSSnapin VMware.VimAutomation.Core -ErrorAction SilentlyContinue)) {
         Add-PSSnapin VMware.VimAutomation.Core
     }
@@ -81,8 +94,8 @@ End {
 # SIG # Begin signature block
 # MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU+8hpVpRMOTbQe5WXAck/G088
-# zRCgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUcP8vFiFn+nOw+TFRh2pVIhOs
+# u5WgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
 # AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
 # HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
 # cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
@@ -102,11 +115,11 @@ End {
 # MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
 # dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
 # DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUmRZh2K+3IhMA
-# Efq925k/Z7UCGcwwDQYJKoZIhvcNAQEBBQAEggEAO5iQSrz2jn4/tFzvYaYQXLal
-# RCVlBFc1VA0zMtbBwHAKFxVjpg9vSu+u9zDWfioS0ILTkNCdoBL0ZnKdF1uszCcS
-# gCrjggG9lCKKJmr2rjMQcT9y2XoWldB5fR3jq7xY5MnHmRAcbVQdEiIrWzK0e7F2
-# c+i6DDN/0AORg72RvDdHLAEPii52bD+k0o8H4UPvsO1TfXHZnAJ/F2rMBAgzwnx2
-# lmLDx6ch4ADUKRtFuGtxk+LbN+2mk6lvOPYO/IihdEAVwjN5/8rOHgYfxeocMwcD
-# TZSVTuWVbgkMkeU4wLupJydDfFhnQjCHi4qxlyQwLIzsWHCbFm+SnW4Xy17xJQ==
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUSAB037lOKX06
+# LtNCbpxjOWfTgYMwDQYJKoZIhvcNAQEBBQAEggEAkyChTj+YpZ8hVcXVnutE6Eq0
+# LvDO14ssoEuq+6MRYzl5fMxgenzTfwwYg4AA51pALBXbD+YZLEn0gP2KwvMasQ0Q
+# 2PK3HJLUeRUTWo2gfJH4Nxqov9eszhkSBtvtxPjOiAPdWLjgMO2T9KmuEFWdGRJk
+# v+Zk/fRIRSz2TD/2efvrLHz2qTqCwSxr/ptJGIzDZwfOALqK78p8U8vswwMY8u8w
+# Oc5BIJaNVfHRJoFiUNxcU493ozc8agFhzzuxCbtg1G7WerN1bQ6KTh3OY1NCifX7
+# WCs7pO2y/9Tf0Nu9XhZbdqoGrYmW5M/PkncRxFyo7ytkG01nrl1OA5OcSPwgCg==
 # SIG # End signature block

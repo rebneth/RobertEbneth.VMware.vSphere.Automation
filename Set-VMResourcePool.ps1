@@ -13,11 +13,16 @@
   February, 9th, 2017
 .LINK
   http://github.com/rebneth/RobertEbneth.VMware.vSphere.Automation
+.PARAMETER Cluster
+  Selects only ressource pools / VMs location from this vSphere Cluster.
+  If nothing is specified, all vSphere Clusters will be taken.
+.PARAMETER FILENAME
+  Name of the csv input file for the VMs relation to resource pool
 .EXAMPLE
   Set-VMResourcePool.ps1 -Cluster <vSphere Cluster name>
 #>
 
-    # We support Move of VMs to different Resource Pool only if -Confirm:$true
+# We support Move of VMs to different Resource Pool only if -Confirm:$true
 [CmdletBinding(ConfirmImpact='High', SupportsShouldProcess=$true )]
 param(
     [Parameter(Mandatory = $True,
@@ -32,12 +37,11 @@ param(
 )
 
 Begin {
-
+	# Check and if not loaded add powershell snapin
+	if (-not (Get-PSSnapin VMware.VimAutomation.Core -ErrorAction SilentlyContinue)) {
+		Add-PSSnapin VMware.VimAutomation.Core}
     if ((Test-Path $FILENAME) -eq $False)
 	    { Write-Error "Missing Input File: $FILENAME"; break}
-
-    if (-not (Get-PSSnapin VMware.VimAutomation.Core -ErrorAction SilentlyContinue)) {
-        Add-PSSnapin VMware.VimAutomation.Core }
 
     Write-Host "###############################################"
     Write-Host "# Check/Set Resource Pool Setting for each VM #"
@@ -111,8 +115,8 @@ Process {
 # SIG # Begin signature block
 # MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUxtM+d+JRWBiLs4OYNMzL1r0E
-# xdigggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUMTSS+3eZrQZPdiH6MT2v/6XD
+# RfqgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
 # AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
 # HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
 # cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
@@ -132,11 +136,11 @@ Process {
 # MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
 # dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
 # DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQU1UrMrppfZfXH
-# sx1QdC30IaC3ANUwDQYJKoZIhvcNAQEBBQAEggEANlB2HDCsWUxcU7vr+3sp2Lu+
-# wsuulk2StmeKKvb+G8wuQueXbjOeBggO+VBbp40ZPKq6/tJqks3/EHZd29Je2gkr
-# 1D7qOtzhKfIaoQUI5AuMLevytv80JtIh7yuJilO2mKtQddjLi/Tq9BwXCHRoVkKz
-# c6d9CSSUvUUNbZIgeqWw0lp5Jsm0MQt5HltjQbbXs9TcIQ5ZaQRfguDGXsmZkr0L
-# aFkHUHrxLrhHLhCAh+M2bjOXU9F/2mkh6aFg/1eZmQV3hroC9bXBPrqT6oMFOH9h
-# FYj0d6E+Sw3/gb0rPMA1/s7SJ30dNBa8tCVCs8KrRaXss/unF5723RosWtvz2w==
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUa7hS54NN5hJg
+# 17XEeSDV5xPbCb8wDQYJKoZIhvcNAQEBBQAEggEAjq7qUMN+ts1fOxCVjvhxTvnZ
+# weuFcsfWID7lkHNMYzY22N6CBpjRxLsaMZPZ/HUn6SdNmcI/jKOtC9KDiEAt3MGY
+# HospKXM77HwgmUd0L2CKhtl1gu/CsKwXjlJrtHeMBdizKg0L4aODAs2qYQO4ec35
+# PKvsFenFNFc/8Aw/8S3KDwuAjA8o60WOYvghb/mO/Wax01wxGN8cR78IHPbB8Qw5
+# g9gaO/id49XJQ42yE1GKnevqSrZCcXHYgk284VaqsfreLfNIW9siIuutE2+NTxZf
+# E+WXQLCWcmGQdGrL89A3lcLYaEEhkKux1HYu44Bt15NKw/ziRoRoFkWUd/SKpA==
 # SIG # End signature block

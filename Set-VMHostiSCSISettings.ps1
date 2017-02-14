@@ -11,7 +11,7 @@
 .NOTES
   Release 1.1
   Robert Ebneth
-  February, 10th
+  February, 14th
 .LINK
   http://github.com/rebneth/RobertEbneth.VMware.vSphere.Automation
 .PARAMETER Name
@@ -21,6 +21,12 @@
   "10.202.1.101", "10.202.1.103", "10.202.2.102"
   and in one String seperated by , ; or ' ':
   "192.168.1.1,192.168.1.2; 10.10.1.1 1"
+.PARAMETER DelayedAck
+  Default: false
+.PARAMETER NoopTimeout
+  Default: 30
+.PARAMETER LoginTimeout
+  Default: 60
 .EXAMPLE
   Get-VMhost <ESXiHostname> | Set-VMHostiSCSISettings -targets 1.1.1.1, 2.2.2.2 [ -confirm:$false ]
 .EXAMPLE
@@ -51,6 +57,9 @@ param(
 )
 
 Begin {
+	# Check and if not loaded add powershell snapin
+	if (-not (Get-PSSnapin VMware.VimAutomation.Core -ErrorAction SilentlyContinue)) {
+		Add-PSSnapin VMware.VimAutomation.Core}
 }
 
 Process {
@@ -161,8 +170,8 @@ Process {
 # SIG # Begin signature block
 # MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUo6mF/dzhY2pUXT9ssXyRXo2M
-# 1+CgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUJZPBH8T1PJe6WzYVEtoCdkri
+# E3agggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
 # AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
 # HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
 # cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
@@ -182,11 +191,11 @@ Process {
 # MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
 # dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
 # DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQU/eVHQgst74Di
-# NarCMKZmDg1W5E8wDQYJKoZIhvcNAQEBBQAEggEABQu4Ct0dES9nNjExmqr2Z/op
-# CY0HKWo7pDVzKWg9e20GboD2hufXC8b1B2p15IPS9Et13opVmZ97JliHNuWOZ7ge
-# XKAYK3ReUOhKSkpKLLclC9vjPo2ptYBXl0A86pjQ4meamNo7t9NcUziiD/TF8IgB
-# XPPpvyC9CmXjBwVA9fXyTf6KLx9FvSdKcd8ADx/CPDFQC0KkFt9MEYI4Hwvk2wxm
-# xGiz/tW3ChkH7+IZMGrxTMK8nwZVfAHYgysGNBZ6xWCMDwqrDtH9FYQLaw6z+YyH
-# +Gs3Cdv/8ybDoQ8glvhvlzP1dBLP/5ugpl7KJ7b6Zj0AhYye3udlGhvW1J+Dsw==
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUj3v2CC5GT7ls
+# 4bYmKaJ7/CxIbKwwDQYJKoZIhvcNAQEBBQAEggEAkMsyha8nQD0vX1/8QpXe5+oz
+# sxOZTZ64xajGmZV4CodRnaWNwuoDM4jWCwmUFUs4wEbxbhuzSJOvzgFgPkJaIJmA
+# zWY13YBmuUNLR1Cz21oA7UBTv3qz+DuoBv9TOk0Aj5LfsKyN+874Zz7HJS6heaKs
+# M42dPXANixA0VdytpGau1p5gjg3JynCNsPFeubFepvvZA7dFPu+Q7EsSwUjn3pGK
+# q1Xc2k+BjKTMPDEvqRlFY8n1dOVbZ9ukJXjiy+CqG2v9dJ9Vt3v9nnuhHZ6K52JU
+# OkuAlBEmAQgjOEol8T8iYj2JVzzN4ETEFvXhhyA7Nc5TNIoudBUGZoHUE2tn1g==
 # SIG # End signature block
