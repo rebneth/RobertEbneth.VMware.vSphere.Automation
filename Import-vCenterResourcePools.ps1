@@ -7,7 +7,7 @@
 .NOTES
   Release 1.1
   Robert Ebneth
-  February, 14th, 2017
+  March, 15th, 2017
 .LINK
   http://github.com/rebneth/RobertEbneth.VMware.vSphere.Automation
 .PARAMETER Cluster
@@ -28,7 +28,7 @@ param(
     [Parameter(Mandatory = $False, ValueFromPipeline=$false,
     HelpMessage = "Overwrite DRS Settings if Resource Pool exists?")]
     [Alias("f")]
-	[switch]$Force = $false
+	[switch]$Force = $false,
 	[Parameter(Mandatory = $True, ValueFromPipeline=$false, ValueFromPipelineByPropertyName=$false, Position = 1,
 	HelpMessage = "Enter the path to the xml input file")]
 	[string]$FILENAME = "$($env:USERPROFILE)\vCenter_ResourcePools.xml"
@@ -45,7 +45,6 @@ Begin {
     Write-Host "#####################################################"
     Write-Host "# Import vCenter Resource Pools and their Structure #"
     Write-Host "#####################################################"
-    $FILENAME = "$($PSScriptRoot)\vCenter_ResourcePools.xml"
     if ((Test-Path $FILENAME) -eq $False)
 		{ Write-Error "Missing Input File: $FILENAME"; break}
 	$BackupResourcePools = Import-Clixml $FILENAME	
@@ -139,8 +138,8 @@ foreach ( $RP in $AllResourcePools ) {
 # SIG # Begin signature block
 # MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUfqse2P9yhoJmoH44r1CIBL/D
-# vPWgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUTPviDEfOJRb/n/N/vZ2keS4h
+# lJagggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
 # AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
 # HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
 # cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
@@ -160,11 +159,11 @@ foreach ( $RP in $AllResourcePools ) {
 # MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
 # dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
 # DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUlVHUjnR+3TxY
-# eGB4H+oPOpfycoAwDQYJKoZIhvcNAQEBBQAEggEAL9iLjz80CPlbErVbRQqYjTOC
-# vH2WtpJ1b1fY/YYNS0VIqu40NbYzTVsVIuPD2k+bUyfYenQxBX0Udi5LAzUPD3ws
-# dYKyyF15hTCa3h92luNxbIm05BcgZjQ56P6y6LJw1kHJUhKN2eawvxOjpTEUtyWj
-# svC8gXH5Hq5L6S85EYr0HIQseN0A0MpAUojBlgzs9OtqLHZxcCbUIL0PceD/jcT0
-# WDjSRUsB+OFlfpLBQ7v+HujZB1bsWgAk3wKMoPjrr2jQ+7P3yh3Wj2xsHHbZOam2
-# +Zl0h1VXydARZJeIJqc8tnio/MALGRCGy2EJBzTa160B+3Dp2J9FvKG8HKX2kA==
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUtR6OWSzKhVNt
+# G4B9D7dLAuRbM1MwDQYJKoZIhvcNAQEBBQAEggEAgzu3wVmHJHbDgO9iBY8b2VHZ
+# tBxlgp/poRd66eK+OsbBdvsYWeJYUw5Wi7JxBmxi4REx4dilYbf8VZcXLIAWBaSr
+# S/Ej2YQAA1iHXYW3mOu4uI+FjZRBd7NwwGziN3ARifKHK6BCWqh+2LhfMWG20jEI
+# lno/NE1Vamkmyru/3TJnOPX0ig2Z00gu/hBGEBOLJJfIWcrVo1GOrt19E5MExBNh
+# VWP4Q/vp+0HZYn/lPV/e6FnqvYwHZZSJyNHl5r3LWAwQZdXvGOey4qFPxakXZf1C
+# p9eGZlgKQ6onrEl3gD4mboMEBIEleMHZOeANd5T5ZBDKHh/zRDpbRzJcQfVTlA==
 # SIG # End signature block

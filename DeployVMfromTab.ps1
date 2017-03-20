@@ -1,4 +1,4 @@
-Function VM-DeployfromTab {
+Function DeployVMfromTab {
 <#
 .SYNOPSIS
   Mass Deployment for VMware vSphere VMs from csv input file
@@ -28,9 +28,9 @@ Function VM-DeployfromTab {
   Default: false
 .PARAMETER VCENTER
 .EXAMPLE
- VM-DeployfromTab
+ DeployVMfromTab
 .EXAMPLE
- VM-DeployfromTab -Start:$true
+ DeployVMfromTab -Start:$true
 #>
 
 #[CmdletBinding()]
@@ -277,8 +277,8 @@ param(
 # SIG # Begin signature block
 # MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUu0oj46a1IGX2UNKuRxwp/Hpi
-# ntCgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU5v7YPW5TtqtRnsjJFR5lqq+D
+# NL+gggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
 # AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
 # HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
 # cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
@@ -298,11 +298,11 @@ param(
 # MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
 # dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
 # DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUE/lca201fJ6w
-# nfML3463AxF1NI4wDQYJKoZIhvcNAQEBBQAEggEAWg6txT+wruQdZJ8MDQezHGXd
-# P/9tSJ91zd+K8oLevwH/3i2dTAuQoUm+yUFleNpErnyWrnscivjz68RZqRMvXvlO
-# 5WN9PTPlgBRYfnI0AcRvpAYRWVgTOv5NtKaiiH9imSyDER7fac4x1bEej2cO4m7e
-# J4mZWzrE0kFexZT8OETNLFld3FaigC5eTBBjY5RYF/8L5rtGklPbeLGkWsLXKNSg
-# l+1Op0GZbR/xlsjdYcf71GQnOiSyEYBaQ8DnmfsdaoS96VNMevFRjbgJn8pshf39
-# OXNkKYbXaaUfkDoqVIPTuTkhOLgYmQG1DPI+4Tb8u+0Vm6mD4+7zjx0nK9gogg==
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUQ09hX/dqvDuf
+# Hyo7/blBMYC4vp4wDQYJKoZIhvcNAQEBBQAEggEAK3ia+aT+ViMAyUo5XNaYxPlX
+# seKN3iOICTGTsY2mCq8Xr4KHIyQK8iUJAxRaNhdvm3T9PhBqLu7deD+zT82qNQKM
+# HdBiYDjIb+Quv+1tJs9hBxXASjdy1rZIdyQaSDkNS0AuUQy97b7XXANEyLF6GIyq
+# 7SbGCphh3dqEOWgr5JtAJODoyTNCryzrZUCfNQBPzCeYHknNisGjTJdfZ/i6EuaH
+# /zaOrWE1+whfh5VrDAQu9p85cfHeg5Ngcg1LTBd8Xv50afK5iIaBg/dTNZoQH+mE
+# ftaiZ2lrucU7UHKzhxDo/X+r4NRXxRWjzRa+x6aolx7DzfdU9q79+H3GpMlFZQ==
 # SIG # End signature block
