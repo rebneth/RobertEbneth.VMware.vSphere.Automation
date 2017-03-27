@@ -6,12 +6,12 @@ used for VMware administration and documentation**
 
 Latest Update: March, 20th, 2017
 
-DeployVMfromTab					- Deploys VMs from csv Table
+DeployVMfromTab					- Deploys VMs from csv Table  
 
-Export-VMFolderPathLocation		- Exports VM's Folderpath to csv File 
+Export-VMFolderPathLocation		- Exports VM's Folderpath to csv File  
 Export-vCenterResourcePools		- Exports vCenter ResourcePool Settings to xml File  
 Import-vCenterResourcePools		- Creates vCenter ResourcePool Settings from xml File  
-Set-VMFolderPathLocation		- Moves VMs to Folder; uses csv file from Export-VMFolderPathLocation 
+Set-VMFolderPathLocation		- Moves VMs to Folder; uses csv file from Export-VMFolderPathLocation  
 Set-VMResourcePool				- Moves VMs to ResourcePool; uses csv file from Export Script  
 
 Backup_vCenter_Environment		- WorkFlow and Backup_vCenter_Environment  
