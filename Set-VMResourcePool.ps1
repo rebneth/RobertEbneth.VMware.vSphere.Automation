@@ -1,7 +1,7 @@
 ﻿function Set-VMResourcePool {
 <#
 .SYNOPSIS
-  Check Resouurce Pool Setting for each VM from a vSphere Cluster
+  Check Resource Pool Setting for each VM from a vSphere Cluster
 .DESCRIPTION
   Reads previous Backup File for Ressource Pool Settings for VMs
   Check Resouurce Pool Setting for each VM from a vSphere Cluster.
@@ -10,7 +10,7 @@
 .NOTES
   Release 1.1
   Robert Ebneth
-  February, 9th, 2017
+  March, 27th, 2017
 .LINK
   http://github.com/rebneth/RobertEbneth.VMware.vSphere.Automation
 .PARAMETER Cluster
@@ -115,8 +115,8 @@ Process {
 # SIG # Begin signature block
 # MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUMTSS+3eZrQZPdiH6MT2v/6XD
-# RfqgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUcnxwp6nhV0GgwK3h+wMev1wl
+# g4qgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
 # AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
 # HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
 # cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
@@ -136,11 +136,11 @@ Process {
 # MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
 # dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
 # DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUa7hS54NN5hJg
-# 17XEeSDV5xPbCb8wDQYJKoZIhvcNAQEBBQAEggEAjq7qUMN+ts1fOxCVjvhxTvnZ
-# weuFcsfWID7lkHNMYzY22N6CBpjRxLsaMZPZ/HUn6SdNmcI/jKOtC9KDiEAt3MGY
-# HospKXM77HwgmUd0L2CKhtl1gu/CsKwXjlJrtHeMBdizKg0L4aODAs2qYQO4ec35
-# PKvsFenFNFc/8Aw/8S3KDwuAjA8o60WOYvghb/mO/Wax01wxGN8cR78IHPbB8Qw5
-# g9gaO/id49XJQ42yE1GKnevqSrZCcXHYgk284VaqsfreLfNIW9siIuutE2+NTxZf
-# E+WXQLCWcmGQdGrL89A3lcLYaEEhkKux1HYu44Bt15NKw/ziRoRoFkWUd/SKpA==
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUmpvsNMDy2yD7
+# y2H/Cr5s5Gw2HbIwDQYJKoZIhvcNAQEBBQAEggEAGe/8jK/tlimBSrH9YXW4OR+A
+# sf6+AmQWhy1ot9wPkixeRu+smj8SNV7a2gwPfF11C4osHqn/0EqAsfizOyQqKmsp
+# D9WoPLgyZgdlbrqrCuF+5mX5bvEQtC3AELV8+ZR1SRsr1EOjTP00Y7+tSVMg2u2W
+# h+opwzqwJOkv3yd+MJmnde3ABaYMSWAwW6uWqZ5OCnNyAyd+BcUq1VuzxVYPMeUS
+# l8L2KnP0ccNMODYZrjyBzZmYX32z7LSKv2+EIVNrDZIdfbzovx5M5zkRYOE+XjU1
+# Wp2X9+FsQBfDwoTwq9OjUYqa7Te+SHL56TQo96Wi0tAgWhw9Pvt8hjPqcXigLQ==
 # SIG # End signature block
