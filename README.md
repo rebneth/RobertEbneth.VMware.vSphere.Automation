@@ -20,6 +20,7 @@ Get-VAAI Settings				- Exports VAAI Settings to csv file
 Set-VAAI Settings				- Sets VAAI Properties on ESXi Servers 
 Set-VMHostiSCSISettings			- Sets Dynamic/Static iSCSI Target bindings and important iSCSI Parameters for SW iSCSI Adapter  
 
-Set-VMCBTenable					- enables CBT (Changed Block Tracking) property of VMs 
+Set-VMCBTenable					- enables CBT (Changed Block Tracking) property of VMs  
+Set-VMCBTReset					- resets CBT (Changed Block Tracking) property of VMs 
 Get-VMsshConfig					- Exports Lockdown Mode and ssh service state to a csv file 
 Get-VMNTPConfig					- Exports NTP settings to a csv file 
