@@ -1,0 +1,137 @@
+GuidelineID;ConfigurationParameter;Target_Value;Default_Value;Is desired value the default?;ActionType;Negative Functional Impact;PowerCLI Command Assessment;PowerCLI Command Remediation;Able to set using Host Profile;Reference
+VM.disable-console-copy;isolation.tools.copy.disable;TRUE;Null;No;Add;This is the default setting so functionality remains the same;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.copy.disable"" | where {$_.value -eq ""false""} | Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.copy.disable"" -value $true";N/A;"
+?http://pubs.vmware.com/vsphere-60/topic/com.vmware.vsphere.security.doc/GUID-367D02C1-B71F-4AC3-AA05-85033136A667.html"
+VM.disable-console-drag-n-drop;isolation.tools.dnd.disable;True;Null;No;Audit Only;None;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.dnd.disable"" | where {$_.value –eq “false”} | Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.dnd.disable"" -value $true";N/A;"
+?http://pubs.vmware.com/vsphere-60/topic/com.vmware.vsphere.security.doc/GUID-367D02C1-B71F-4AC3-AA05-85033136A667.html"
+VM.disable-console-gui-options;isolation.tools.setGUIOptions.enable;FALSE;Null;No;Add;None;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name  ""isolation.tools.setGUIOptions.enable"" | where {$_.value –eq “false”} |  Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.setGUIOptions.enable"" -value $false";N/A;
+VM.disable-console-paste;isolation.tools.paste.disable;TRUE;Null;No;Add;None;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.paste.disable"" | where {$_.value –eq “false”} | Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.paste.disable"" -value $true";N/A;"
+?http://pubs.vmware.com/vsphere-60/topic/com.vmware.vsphere.security.doc/GUID-367D02C1-B71F-4AC3-AA05-85033136A667.html"
+VM.disable-disk-shrinking-shrink;isolation.tools.diskShrink.disable;TRUE;Null;No;Add;Inability to shrink virtual machine disks in the event that a datastore runs out of space.;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.diskShrink.disable"" | where {$_.value –eq “false”} | Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.diskShrink.disable"" -value $true";N/A;http://pubs.vmware.com/vsphere-60/topic/com.vmware.vsphere.security.doc/GUID-9610FE65-3A78-4982-8C28-5B34FEB264B6.html
+VM.disable-disk-shrinking-wiper;isolation.tools.diskWiper.disable;TRUE;Null;No;Add;Inability to shrink virtual machine disks in the event that a datastore runs out of space.;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.diskWiper.disable"" | where {$_.value –eq “false”} | Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.diskWiper.disable"" -value $true";N/A;"
+http://pubs.vmware.com/vsphere-60/topic/com.vmware.vsphere.security.doc/GUID-9610FE65-3A78-4982-8C28-5B34FEB264B6.html"
+VM.disable-hgfs;isolation.tools.hgfsServerSet.disable;TRUE;Null;No;Add;This will cause the VMX process to not respond to commands from the tools process, this may have a negative impact on operations such as automated tools upgrades;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.hgfsServerSet.disable"" | where {$_.value –eq “false”} | Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.hgfsServerSet.disable"" -value $true";N/A;http://pubs.vmware.com/vsphere-60/topic/com.vmware.vsphere.security.doc/GUID-76EF6146-FA0E-467F-826F-C953815218C5.html
+VM.disable-independent-nonpersistent;scsiX:Y.mode;One of the following: * Not present (defaults to Persistent if blank) * Explicitly set to Persistent *Set to Independent-Persistent;Persistent;No;Add;Won’t be able to make use of nonpersistent mode, which allows rollback to a known state when rebooting the VM.;"#List the VM's and their disk types
+Get-VM | Get-HardDisk | where {$_.Persistence –ne “Persistent”} | Select Parent, Name, Filename, DiskType, Persistence";"#Alter the parameters for the following cmdlet to set the VM Disk Type:
+Get-VM  | Get-HardDisk | Set-HardDisk";N/A;"
+?http://pubs.vmware.com/vsphere-60/topic/com.vmware.vsphere.security.doc/GUID-1E583D6D-77C7-402E-9907-80B7F478D3FC.html"
+VM.disable-unexposed-features-autologon;isolation.tools.ghi.autologon.disable;TRUE;Null;No;Add;None;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.ghi.autologon.disable""| where {$_.Value –eq “True”} | Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.ghi.autologon.disable"" -value $true";N/A;http://pubs.vmware.com/vsphere-60/topic/com.vmware.vsphere.security.doc/GUID-60E83710-8295-41A2-9C9D-83DEBB6872C2.html
+VM.disable-unexposed-features-biosbbs;isolation.bios.bbs.disable;TRUE;Null;No;Add;None;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.bios.bbs.disable""| where {$_.Value –eq “False”} | Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.bios.bbs.disable"" -value $true";N/A;http://pubs.vmware.com/vsphere-60/topic/com.vmware.vsphere.security.doc/GUID-60E83710-8295-41A2-9C9D-83DEBB6872C2.html
+VM.disable-unexposed-features-getcreds;isolation.tools.getCreds.disable;TRUE;Null;No;Add;None;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.getCreds.disable""| where {$_.Value –eq “False”} |  Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.getCreds.disable"" -value $true";N/A;http://pubs.vmware.com/vsphere-60/topic/com.vmware.vsphere.security.doc/GUID-60E83710-8295-41A2-9C9D-83DEBB6872C2.html
+VM.disable-unexposed-features-launchmenu;isolation.tools.ghi.launchmenu.change;TRUE;Null;No;Add;None;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.ghi.launchmenu.change"" | where {$_.Value –eq “False”} |  Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.ghi.launchmenu.change"" -value $true";N/A;http://pubs.vmware.com/vsphere-60/topic/com.vmware.vsphere.security.doc/GUID-60E83710-8295-41A2-9C9D-83DEBB6872C2.html
+VM.disable-unexposed-features-memsfss;isolation.tools.memSchedFakeSampleStats.disable;TRUE;Null;No;Add;None;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.memSchedFakeSampleStats.disable"" | where {$_.Value –eq “False”} |  Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.memSchedFakeSampleStats.disable"" -value $true";N/A;http://pubs.vmware.com/vsphere-60/topic/com.vmware.vsphere.security.doc/GUID-60E83710-8295-41A2-9C9D-83DEBB6872C2.html
+VM.disable-unexposed-features-protocolhandler;isolation.tools.ghi.protocolhandler.info.disable;TRUE;Null;No;Add;Some automated tools and process may cease to function;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.ghi.protocolhandler.info.disable"" | where {$_.Value –eq “False”} | Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.ghi.protocolhandler.info.disable"" -value $true";N/A;
+VM.disable-unexposed-features-shellaction;isolation.ghi.host.shellAction.disable;TRUE;Null;No;Add;Some automated tools and process may cease to function;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.ghi.host.shellAction.disable"" | where {$_.Value –eq “False”} |  Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.ghi.host.shellAction.disable"" -value $true";N/A;
+VM.disable-unexposed-features-toporequest;isolation.tools.dispTopoRequest.disable;TRUE;Null;No;Add;Some automated tools and process may cease to function;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.dispTopoRequest.disable""| where {$_.Value –eq “False”} |  Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.dispTopoRequest.disable"" -value $true";N/A;
+VM.disable-unexposed-features-trashfolderstate;isolation.tools.trashFolderState.disable;TRUE;Null;No;Add;Some automated tools and process may cease to function;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.trashFolderState.disable""| where {$_.Value –eq “False”} |  Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.trashFolderState.disable"" -value $true";N/A;
+VM.disable-unexposed-features-trayicon;isolation.tools.ghi.trayicon.disable;TRUE;Null;No;Add;Some automated tools and process may cease to function;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.ghi.trayicon.disable""| where {$_.Value –eq “False”} |  Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.ghi.trayicon.disable"" -value $true";N/A;
+VM.disable-unexposed-features-unity;isolation.tools.unity.disable;TRUE;Null;No;Add;Some automated tools and process may cease to function;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.unity.disable""| where {$_.Value –eq “False”} |  Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.unity.disable"" -value $true";N/A;
+VM.disable-unexposed-features-unity-interlock;isolation.tools.unityInterlockOperation.disable;TRUE;Null;No;Add;Some automated tools and process may cease to function;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.unityInterlockOperation.disable""| where {$_.Value –eq “False”} |  Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.unityInterlockOperation.disable"" -value $true";N/A;
+VM.disable-unexposed-features-unitypush;isolation.tools.unity.push.update.disable;TRUE;Null;No;Add;None;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.unity.push.update.disable"" | where {$_.Value –eq “False”} |  Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.unity.push.update.disable"" -value $true";N/A;
+VM.disable-unexposed-features-unity-taskbar;isolation.tools.unity.taskbar.disable;TRUE;Null;No;Add;Some automated tools and process may cease to function;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.unity.taskbar.disable"" | where {$_.Value –eq “False”} |  Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.unity.taskbar.disable"" -value $true";N/A;
+VM.disable-unexposed-features-unity-unityactive;isolation.tools.unityActive.disable;TRUE;Null;No;Add;Some automated tools and process may cease to function;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.unityActive.disable"" | where {$_.Value –eq “False”} |  Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.unityActive.disable"" -value $True";N/A;
+VM.disable-unexposed-features-unity-windowcontents;isolation.tools.unity.windowContents.disable;TRUE;Null;No;Add;Some automated tools and process may cease to function;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.unity.windowContents.disable"" | where {$_.Value –eq “False”} |  Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.unity.windowContents.disable"" -value $True";N/A;
+VM.disable-unexposed-features-versionget;isolation.tools.vmxDnDVersionGet.disable;TRUE;Null;No;Add;Some automated tools and process may cease to function;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.vmxDnDVersionGet.disable""| where {$_.Value –eq “False”} | Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.vmxDnDVersionGet.disable"" -value $true";N/A;
+VM.disable-unexposed-features-versionset;isolation.tools.guestDnDVersionSet.disable;TRUE;Null;No;Add;Some automated tools and process may cease to function;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.guestDnDVersionSet.disable""| where {$_.Value –eq “False”} |  Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.guestDnDVersionSet.disable"" -value $true";N/A;
+VM.disable-vix-messages;isolation.tools.vixMessage.disable;TRUE;Null;No;Add;Guest will no longer be able to send messages via VIX API;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.tools.vixMessage.disable""| where {$_.Value –eq “False”} |  Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.vixMessage.disable"" -value $true";N/A;"
+ 
+?"
+VM.disable-VMtools-autoinstall;isolation.tools.autoInstall.disable;TRUE;Null;No;Add;This option disables tools auto install, all tools installs will have to be manually started.;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name  ""isolation.tools.autoInstall.disable""| where {$_.Value –eq “False”} | Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.tools.autoInstall.disable"" -value $true";N/A;
+VM.disconnect-devices-floppy;floppyX.present;not present or FALSE;;No;;Virtual machine will need to be powered off to reverse change if any of these devices are needed at a later time.;"# Check for Floppy Devices attached to VMs
+Get-VM | Get-FloppyDrive | Select Parent, Name, ConnectionState";"# Remove all Floppy drives attached to VMs
+Get-VM | Get-FloppyDrive | Remove-FloppyDrive";N/A;http://pubs.vmware.com/vsphere-55/topic/com.vmware.vsphere.security.doc/GUID-822B2ED3-D8D2-4F57-8335-CA46E915A729.html
+VM.disconnect-devices-parallel;parallelX.present;not present or FALSE;;No;;Virtual machine will need to be powered off to reverse change if any of these devices are needed at a later time.;"# In this Example you will need to add the functions from this post: http://blogs.vmware.com/vipowershell/2012/05/working-with-vm-devices-in-powercli.html
+# Check for Parallel ports attached to VMs
+Get-VM | Get-ParallelPort";"# In this Example you will need to add the functions from this post: http://blogs.vmware.com/vipowershell/2012/05/working-with-vm-devices-in-powercli.html
+# Remove all Parallel Ports attached to VMs
+Get-VM | Get-ParallelPort | Remove-ParallelPort";N/A;http://pubs.vmware.com/vsphere-55/topic/com.vmware.vsphere.security.doc/GUID-822B2ED3-D8D2-4F57-8335-CA46E915A729.html
+VM.disconnect-devices-serial;serialX.present;not present or FALSE;;No;;Virtual machine will need to be powered off to reverse change if any of these devices are needed at a later time.;"# In this Example you will need to add the functions from this post: http://blogs.vmware.com/vipowershell/2012/05/working-with-vm-devices-in-powercli.html
+# Check for Serial ports attached to VMs
+Get-VM | Get-SerialPort";"# In this Example you will need to add the functions from this post: http://blogs.vmware.com/vipowershell/2012/05/working-with-vm-devices-in-powercli.html
+# Remove all Serial Ports attached to VMs
+Get-VM | Get-SerialPort | Remove-SerialPort";N/A;http://pubs.vmware.com/vsphere-55/topic/com.vmware.vsphere.security.doc/GUID-822B2ED3-D8D2-4F57-8335-CA46E915A729.html
+VM.limit-setinfo-size;tools.setInfo.sizeLimit;1048576;Null;No;Add;None;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""tools.setInfo.sizeLimit"" | where {$_.Value –gt “1048576”} |  Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""tools.setInfo.sizeLimit"" -value 1048576";N/A;"
+?http://pubs.vmware.com/vsphere-60/topic/com.vmware.vsphere.vm_admin.doc/GUID-685722FA-9009-439C-9142-18A9E7C592EA.html
+http://pubs.vmware.com/vsphere-60/topic/com.vmware.vsphere.security.doc/GUID-91BF834E-CB92-4014-8CF7-29CE40F3E8A3.html"
+VM.minimize-console-VNC-use;RemoteDisplay.vnc.enabled;FALSE;Null;No;Audit Only;None;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""RemoteDisplay.vnc.enabled"" | where {$_.Value –eq “True”} |  Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""RemoteDisplay.vnc.enabled"" -value $false";N/A;
+VM.prevent-device-interaction-connect;isolation.device.connectable.disable;TRUE;Null;No;Add;Device interaction is blocked inside the guest OS using VMware tools;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.device.connectable.disable"" | where {$_.Value –eq “False”} |  Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.device.connectable.disable"" -value $true";N/A;"
+http://pubs.vmware.com/vsphere-60/topic/com.vmware.vsphere.vm_admin.doc/GUID-685722FA-9009-439C-9142-18A9E7C592EA.html
+http://pubs.vmware.com/vsphere-60/topic/com.vmware.vsphere.security.doc/GUID-F88A5FED-552B-44F9-A168-C62D9306DBD6.html"
+VM.prevent-device-interaction-edit;isolation.device.edit.disable;TRUE;Null;No;Add;Device interaction is blocked inside the guest OS using VMware tools;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""isolation.device.edit.disable"" | where {$_.Value –eq “False”} | Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""isolation.device.edit.disable"" -value $true";N/A;http://pubs.vmware.com/vsphere-60/topic/com.vmware.vsphere.security.doc/GUID-F88A5FED-552B-44F9-A168-C62D9306DBD6.html
+VM.restrict-host-info;tools.guestlib.enableHostInfo;False;Null;No;Audit Only;Unable to retrieve performance information about the host from inside the guest, there are times when this can be useful for troubleshooting.;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name  ""tools.guestlib.enableHostInfo""| where {$_.Value –eq “True”} | Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""tools.guestlib.enableHostInfo"" -value $false";N/A;http://pubs.vmware.com/vsphere-60/topic/com.vmware.vsphere.security.doc/GUID-2CF880DA-2435-4201-9AFB-A16A11951A2D.html
+VM.TransparentPageSharing-inter-VM-Enabled;maxConnections;Site-Specific;Null;No;Remove, Modify;Running with Inter-VM page sharing should only be done between virtual machines that are trust-worthy. ;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""Mem.ShareForceSalting"" | where {$_.Value –eq “1”} | Select Entity, Name, Value";"# Add the setting to all VMs
+$ vmsaltvalue = ""<some unique value>""
+Get-VM | New-AdvancedSetting -Name ""sched.mem.pshare.salt"" -value $vmsaltvalue";NO;"
+https://kb.vmware.com/kb/2080735
+?https://kb.vmware.com/kb/2097593
+?https://kb.vmware.com/kb/2091682"
+VM.verify-network-filter;ethernetn.filtern.name = filtername;Null unless using dvfilter;Null;No;Audit Only;incorrectly configuring this option can negatively impact functionality of tools that use dvFilter API's.;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name  ""ethernet*.filter*.name*"" | Select Entity, Name, Value";;N/A;http://pubs.vmware.com/vsphere-60/topic/com.vmware.vsphere.security.doc/GUID-CD0783C9-1734-4B9A-B821-ED17A77B0206.html
+VM.verify-PCI-Passthrough;pciPassthru*.present;NULL;NULL;Yes;Audit Only;A buggy or malicious driver in the guest OS could cause a fault with the physical host resulting in a host crash;"# List the VMs and their current settings
+Get-VM | Get-AdvancedSetting -Name ""pciPassthru*.present"" | Select Entity, Name, Value";"# Add the setting to all VMs
+Get-VM | New-AdvancedSetting -Name ""pciPassthru*.present"" -value """"";N/A;"
+?http://pubs.vmware.com/vsphere-60/topic/com.vmware.powercli.ug.doc/GUID-0E922C7E-67DF-4A05-B4C0-013FC4EC60F4.html"
