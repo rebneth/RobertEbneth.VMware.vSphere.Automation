@@ -11,9 +11,9 @@ Function DeployVMfromTab {
   vmname,vccluster,resourcepool,vlan,template,customspec,datastorecluster,
   NumvCPU(optional, but has to be "" if not defined),vRAMGB(optional...),vmfolder
 .NOTES
-  Release 1.1
+  Release 1.1a
   Robert Ebneth
-  February, 14th, 2017
+  May, 11th, 2017
 .LINK
   http://github.com/rebneth/RobertEbneth.VMware.vSphere.Automation
 .PARAMETER FILENAME
@@ -58,11 +58,13 @@ param(
 	    { Write-Error "Missing Input File: $FILENAME"; break}
 
     # Load VMware PS Core Module/SnapIn
-    if (-not (Get-PSSnapin VMware.VimAutomation.Core -ErrorAction SilentlyContinue)) {
-        Add-PSSnapin VMware.VimAutomation.Core }
+    if ( !(Get-Module -Name VMware.VimAutomation.Core -ErrorAction SilentlyContinue) ) {
+        Import-Module VMware.VimAutomation.Core
+    }
     # We need VMware Module VMware.VimAutomation.Vds (Get-VDPortgroup)
-    if(-not(Get-Module -name VMware.VimAutomation.Vds ))
-        { Import-Module VMware.VimAutomation.Vds -ErrorAction SilentlyContinue }
+    if ( !(Get-Module -Name VMware.VimAutomation.Vds -ErrorAction SilentlyContinue) ) {
+        Import-Module VMware.VimAutomation.Vds
+    }
     #On demand: asking the admin for vcenter credentials at each run of the script
     if(!$defaultVIServer.IsConnected){
 		$credential = Get-Credential -Message "Enter Credentials for $vcenter" -UserName "yourusername@vsphere6.local"
@@ -277,8 +279,8 @@ param(
 # SIG # Begin signature block
 # MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU5v7YPW5TtqtRnsjJFR5lqq+D
-# NL+gggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUDCyjNd8QSrpeFVqZFgdy9oZu
+# 78GgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
 # AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
 # HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
 # cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
@@ -298,11 +300,11 @@ param(
 # MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
 # dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
 # DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUQ09hX/dqvDuf
-# Hyo7/blBMYC4vp4wDQYJKoZIhvcNAQEBBQAEggEAK3ia+aT+ViMAyUo5XNaYxPlX
-# seKN3iOICTGTsY2mCq8Xr4KHIyQK8iUJAxRaNhdvm3T9PhBqLu7deD+zT82qNQKM
-# HdBiYDjIb+Quv+1tJs9hBxXASjdy1rZIdyQaSDkNS0AuUQy97b7XXANEyLF6GIyq
-# 7SbGCphh3dqEOWgr5JtAJODoyTNCryzrZUCfNQBPzCeYHknNisGjTJdfZ/i6EuaH
-# /zaOrWE1+whfh5VrDAQu9p85cfHeg5Ngcg1LTBd8Xv50afK5iIaBg/dTNZoQH+mE
-# ftaiZ2lrucU7UHKzhxDo/X+r4NRXxRWjzRa+x6aolx7DzfdU9q79+H3GpMlFZQ==
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQU8uiTFBt85KPZ
+# CUo9B9fFSUUZAegwDQYJKoZIhvcNAQEBBQAEggEAKMh+pO6O12jYhprVG+kwaabr
+# Y4Y5j3wWtfMm2UJ7fAHF66ex5wrd8kyS/sEtkah6i7xYP1ScbLNTAKKqJOjGu9iv
+# 2alj1IX4SSHmNi3l5aPAweWolV7frDbLfMdRgRasm+mezhPHoPrmPFL74zLCWjWi
+# WIN3IT5zSxJGjnsiHkijLcGT64OdcMNFvXIX2+gD3wlLacAPXUi/KM6RHUoyK+87
+# xjnBoWJOejPlZj3DWwXXfk4HpNA2JvTDDOhrtwKQKr6kcI67nGq+ne08IH/kWF6j
+# MiP8q+DBa7679ogAOmUYXQl0y49eXpWTesSYtHfETnRCFNnsGGMVcmry1810tA==
 # SIG # End signature block
