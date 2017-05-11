@@ -4,9 +4,11 @@ VMware Automation Powershell Modules and Scripts by Robert Ebneth
 **VMware Reporting Powershell Module and Scripts
 used for VMware administration and documentation**
 
-Latest Update: March, 27th, 2017
+Latest Update: May, 11th, 2017
 
 DeployVMfromTab					- Deploys VMs from csv Table  
+
+vSphere-Hardening-VM			- Checks VMs Advanced Settings against VMware vSphere 6 Security Guide
 
 Export-VMFolderPathLocation		- Exports VM's Folderpath to csv File  
 Export-vCenterResourcePools		- Exports vCenter ResourcePool Settings to xml File  
