@@ -8,9 +8,9 @@
   If different, move VM to stored Folder Path for this VM
   to that Resource Pool.
 .NOTES
-  Release 1.0
+  Release 1.1
   Robert Ebneth
-  March, 27th, 2017
+  July, 12thth, 2017
 .LINK
   http://github.com/rebneth/RobertEbneth.VMware.vSphere.Automation
 .PARAMETER FILENAME
@@ -27,10 +27,14 @@ param(
     [string]$FILENAME = "$($env:USERPROFILE)\VM_Folderpath_Location_$(get-date -f yyyy-MM-dd-HH-mm-ss).csv"
 )
 
+    ########
+    # Main #
+    ########
 
-	# Check and if not loaded add powershell snapin
-	if (-not (Get-PSSnapin VMware.VimAutomation.Core -ErrorAction SilentlyContinue)) {
-		Add-PSSnapin VMware.VimAutomation.Core}
+    # Check and if not loaded add Powershell core module
+    if ( !(Get-Module -Name VMware.VimAutomation.Core -ErrorAction SilentlyContinue) ) {
+        Import-Module VMware.VimAutomation.Core
+    }
     # We need the common function CheckFilePathAndCreate
     Get-Command "CheckFilePathAndCreate" -errorAction SilentlyContinue | Out-Null
     if ( $? -eq $false) {
@@ -111,8 +115,8 @@ param(
 # SIG # Begin signature block
 # MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUR+oSvrTcYxPhXw24ePrdpUQD
-# 3MagggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUp+7+ta37xzpezkLacUb8tBTv
+# th+gggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
 # AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
 # HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
 # cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
@@ -132,11 +136,11 @@ param(
 # MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
 # dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
 # DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQU7q88kWHFT5NO
-# lwrkX+vDPsc3LpowDQYJKoZIhvcNAQEBBQAEggEAnPCKmtShd490bFZ7r0DBuppc
-# rmIna2BO1pgcTJCGYlpaOp2CIArVhlkXQ67W8zbIyfuuOIbd3j3RZzk50014WLXX
-# fArkvIEIoaJAyqDh66qGA9ozaK1ioW8D8115gNDk+WH27agypzsFnUVqUXtssKsG
-# qs3dvO0hZWl8I5morxLPV6WgitoWE04K7qVdDBLBHoguhZ3ho2GSPif8qc6zbfYR
-# z4/JpDyXOkNQ/6/MGi0wO2SQbpyFBp0sAJ6Ctse/Tczg/LgbpRy/NQYzdvLxsI5O
-# nsv9LtwqUzISHc/9Wpi/UPE8zlTLjx2sj2EZEn3uWMFvnSZmSUmr+RhuZIjGzg==
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQU+EDmXGiIQ3ig
+# m3oYoi9uSZJ3DEkwDQYJKoZIhvcNAQEBBQAEggEARiUu1bfFOEdB/C56fY9rJAo5
+# GeSnYlLzgzmGlJ4d7yqKYnNotkLMsXpL40Xd8BHvqK3V0vMCPP2ZbVMZU0V2aI2F
+# IgIh5slMXdmYf2yVqdWdZXXpi/gS3Ao+r/61T5GFb+/2FM+hq1jVova8saDzEj0o
+# BQfYfmzhwznsLNPpGzprZz3QuSvbEOy8BDLipeDtP0y4xn2a/eOK85ohX2euUKKC
+# P2CQHNIFQncvHBR8O1xSUgrm6Aj4tJT55A1FNuVARtgveE/QM3ZfSfVXOZ7ayRa8
+# 16TmmUgoVwwKw3W42NHA7wVscgKrEmDWs4eh2/sL3VrvO0uh4iIuP5nCch3aKA==
 # SIG # End signature block
