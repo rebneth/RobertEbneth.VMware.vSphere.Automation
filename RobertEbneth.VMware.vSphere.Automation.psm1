@@ -16,7 +16,7 @@
 . $PSScriptRoot\Export-vCenterResourcePools.ps1
 . $PSScriptRoot\Import-vCenterResourcePools.ps1
 . $PSScriptRoot\Prepare-SAN-Lun-Detach.ps1
-. $PSScriptRoot\Remove-vDSPortgroup.ps1
+. $PSScriptRoot\Remove-VMPortgroup.ps1
 . $PSScriptRoot\Set-VMFolderPathLocation.ps1
 . $PSScriptRoot\Set-VMResourcePool.ps1
 . $PSScriptRoot\Set-VAAISettings.ps1
