@@ -5,8 +5,8 @@ VMware Automation Powershell Modules and Scripts by Robert Ebneth
 used for VMware administration and documentation**
 
 Latest Update: July, 12th, 2017
-Notes: Compatibility with PowerCLI
-       Bugfix in pipeline input for clustername
+Notes: Compatibility with PowerCLI  
+       Bugfix in pipeline input for clustername  
 
 DeployVMfromTab					- Deploys VMs from csv Table  
 
