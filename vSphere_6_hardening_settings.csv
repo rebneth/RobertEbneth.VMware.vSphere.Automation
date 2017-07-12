@@ -90,15 +90,15 @@ Get-VM | New-AdvancedSetting -Name ""isolation.tools.vixMessage.disable"" -value
 VM.disable-VMtools-autoinstall;isolation.tools.autoInstall.disable;TRUE;Null;No;Add;This option disables tools auto install, all tools installs will have to be manually started.;"# List the VMs and their current settings
 Get-VM | Get-AdvancedSetting -Name  ""isolation.tools.autoInstall.disable""| where {$_.Value –eq “False”} | Select Entity, Name, Value";"# Add the setting to all VMs
 Get-VM | New-AdvancedSetting -Name ""isolation.tools.autoInstall.disable"" -value $true";N/A;
-VM.disconnect-devices-floppy;floppyX.present;not present or FALSE;;No;;Virtual machine will need to be powered off to reverse change if any of these devices are needed at a later time.;"# Check for Floppy Devices attached to VMs
+VM.disconnect-devices-floppy;floppyX.present;FALSE;;No;Add;Virtual machine will need to be powered off to reverse change if any of these devices are needed at a later time.;"# Check for Floppy Devices attached to VMs
 Get-VM | Get-FloppyDrive | Select Parent, Name, ConnectionState";"# Remove all Floppy drives attached to VMs
 Get-VM | Get-FloppyDrive | Remove-FloppyDrive";N/A;http://pubs.vmware.com/vsphere-55/topic/com.vmware.vsphere.security.doc/GUID-822B2ED3-D8D2-4F57-8335-CA46E915A729.html
-VM.disconnect-devices-parallel;parallelX.present;not present or FALSE;;No;;Virtual machine will need to be powered off to reverse change if any of these devices are needed at a later time.;"# In this Example you will need to add the functions from this post: http://blogs.vmware.com/vipowershell/2012/05/working-with-vm-devices-in-powercli.html
+VM.disconnect-devices-parallel;parallelX.present;FALSE;;No;Add;Virtual machine will need to be powered off to reverse change if any of these devices are needed at a later time.;"# In this Example you will need to add the functions from this post: http://blogs.vmware.com/vipowershell/2012/05/working-with-vm-devices-in-powercli.html
 # Check for Parallel ports attached to VMs
 Get-VM | Get-ParallelPort";"# In this Example you will need to add the functions from this post: http://blogs.vmware.com/vipowershell/2012/05/working-with-vm-devices-in-powercli.html
 # Remove all Parallel Ports attached to VMs
 Get-VM | Get-ParallelPort | Remove-ParallelPort";N/A;http://pubs.vmware.com/vsphere-55/topic/com.vmware.vsphere.security.doc/GUID-822B2ED3-D8D2-4F57-8335-CA46E915A729.html
-VM.disconnect-devices-serial;serialX.present;not present or FALSE;;No;;Virtual machine will need to be powered off to reverse change if any of these devices are needed at a later time.;"# In this Example you will need to add the functions from this post: http://blogs.vmware.com/vipowershell/2012/05/working-with-vm-devices-in-powercli.html
+VM.disconnect-devices-serial;serialX.present;FALSE;;No;Add;Virtual machine will need to be powered off to reverse change if any of these devices are needed at a later time.;"# In this Example you will need to add the functions from this post: http://blogs.vmware.com/vipowershell/2012/05/working-with-vm-devices-in-powercli.html
 # Check for Serial ports attached to VMs
 Get-VM | Get-SerialPort";"# In this Example you will need to add the functions from this post: http://blogs.vmware.com/vipowershell/2012/05/working-with-vm-devices-in-powercli.html
 # Remove all Serial Ports attached to VMs

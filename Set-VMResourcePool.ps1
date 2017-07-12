@@ -8,9 +8,9 @@
   If it differs from Backup Resource Pool settings. VM will be moved
   to that Resource Pool.
 .NOTES
-  Release 1.1
+  Release 1.2
   Robert Ebneth
-  March, 27th, 2017
+  July, 12th, 2017
 .LINK
   http://github.com/rebneth/RobertEbneth.VMware.vSphere.Automation
 .PARAMETER Cluster
@@ -37,9 +37,10 @@ param(
 )
 
 Begin {
-	# Check and if not loaded add powershell snapin
-	if (-not (Get-PSSnapin VMware.VimAutomation.Core -ErrorAction SilentlyContinue)) {
-		Add-PSSnapin VMware.VimAutomation.Core}
+    # Check and if not loaded add Powershell core module
+    if ( !(Get-Module -Name VMware.VimAutomation.Core -ErrorAction SilentlyContinue) ) {
+        Import-Module VMware.VimAutomation.Core
+    }
     if ((Test-Path $FILENAME) -eq $False)
 	    { Write-Error "Missing Input File: $FILENAME"; break}
 
@@ -115,8 +116,8 @@ Process {
 # SIG # Begin signature block
 # MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUcnxwp6nhV0GgwK3h+wMev1wl
-# g4qgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUmYywqK0VduLvIfwE+x2A/U4H
+# C3CgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
 # AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
 # HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
 # cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
@@ -136,11 +137,11 @@ Process {
 # MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
 # dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
 # DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUmpvsNMDy2yD7
-# y2H/Cr5s5Gw2HbIwDQYJKoZIhvcNAQEBBQAEggEAGe/8jK/tlimBSrH9YXW4OR+A
-# sf6+AmQWhy1ot9wPkixeRu+smj8SNV7a2gwPfF11C4osHqn/0EqAsfizOyQqKmsp
-# D9WoPLgyZgdlbrqrCuF+5mX5bvEQtC3AELV8+ZR1SRsr1EOjTP00Y7+tSVMg2u2W
-# h+opwzqwJOkv3yd+MJmnde3ABaYMSWAwW6uWqZ5OCnNyAyd+BcUq1VuzxVYPMeUS
-# l8L2KnP0ccNMODYZrjyBzZmYX32z7LSKv2+EIVNrDZIdfbzovx5M5zkRYOE+XjU1
-# Wp2X9+FsQBfDwoTwq9OjUYqa7Te+SHL56TQo96Wi0tAgWhw9Pvt8hjPqcXigLQ==
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQU4lwjSiFhGLe+
+# 9lC2phh40o1M4JEwDQYJKoZIhvcNAQEBBQAEggEAElUl3hWJx5PRT1OBE9DyywsW
+# dGItDf6YWHHvxeMhXsph9pz7sO74QY2d7ziZ1vLYsn1n0+HKvTOgwq1MO5gMcu/J
+# BuhKiD2+dsazjiSy1ERsbNiBYfQ1UB8Coz9qovPl6jBLFzzdsIWFo8iDsFw4nvC2
+# F4nXKiqYaAvuTrQPNtOv58/nXuu3fgHOFzKh790Exm/aPSB7TLuR4Xs1cXHlUpar
+# xi3JcRO9cAvDL7vY6VR33YOYAyIcbkuB5oK/GVfrzUoDOXe6tUJies7/Vo/IhP2S
+# 7DSAh4rXwmGZXqpdFO5rn+48bnp7rg035b7N9bzmmt0/lOkcX/r1dO3zcjmNVg==
 # SIG # End signature block

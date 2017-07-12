@@ -5,9 +5,9 @@ function Set-VAAISettings {
 .DESCRIPTION
   Set VMware vSphere ESXi Servers VAAI Settings
 .NOTES
-  Release 1.1
+  Release 1.2
   Robert Ebneth
-  February, 14th, 2017
+  July, 12th, 2017
 .LINK
   http://github.com/rebneth/RobertEbneth.VMware.vSphere.Automation
 .PARAMETER Cluster
@@ -51,9 +51,9 @@ function Set-VAAISettings {
 
 
 Begin {
-	# Check and if not loaded add powershell snapin
-    if (-not (Get-PSSnapin VMware.VimAutomation.Core -ErrorAction SilentlyContinue)) {
-        Add-PSSnapin VMware.VimAutomation.Core
+    # Check and if not loaded add Powershell core module
+    if ( !(Get-Module -Name VMware.VimAutomation.Core -ErrorAction SilentlyContinue) ) {
+        Import-Module VMware.VimAutomation.Core
     }
     $report = @()
 } ### End Begin
@@ -94,8 +94,8 @@ End {
 # SIG # Begin signature block
 # MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUcP8vFiFn+nOw+TFRh2pVIhOs
-# u5WgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUeyqJ2a6uzm4gWgY05+OcJWn5
+# Bc6gggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
 # AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
 # HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
 # cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
@@ -115,11 +115,11 @@ End {
 # MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
 # dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
 # DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUSAB037lOKX06
-# LtNCbpxjOWfTgYMwDQYJKoZIhvcNAQEBBQAEggEAkyChTj+YpZ8hVcXVnutE6Eq0
-# LvDO14ssoEuq+6MRYzl5fMxgenzTfwwYg4AA51pALBXbD+YZLEn0gP2KwvMasQ0Q
-# 2PK3HJLUeRUTWo2gfJH4Nxqov9eszhkSBtvtxPjOiAPdWLjgMO2T9KmuEFWdGRJk
-# v+Zk/fRIRSz2TD/2efvrLHz2qTqCwSxr/ptJGIzDZwfOALqK78p8U8vswwMY8u8w
-# Oc5BIJaNVfHRJoFiUNxcU493ozc8agFhzzuxCbtg1G7WerN1bQ6KTh3OY1NCifX7
-# WCs7pO2y/9Tf0Nu9XhZbdqoGrYmW5M/PkncRxFyo7ytkG01nrl1OA5OcSPwgCg==
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUh/55n3CbSqLJ
+# 8kSqf4g3az8t+C4wDQYJKoZIhvcNAQEBBQAEggEANZs+jfn06EzxTEANhGo56IPa
+# SClG8yf7rku1qlGksvJ44hix+Xfnxj4HNfAbi6AkDiIjodwkfmPeaVWrSfMgKs0h
+# dmgjDrDlY19l77eumeFcp+V0EivNjt+pYXYzhQkJlhq6Fwrv8TVQT3ymoT/l97PH
+# ZwcXgaECQzosyaLcehf+FjsE0WEVaM2SlfTTK/5HDEAOJQAtzZ9VDOGaNUdF92ka
+# GRv59zIbnEDkb2tKyyRfiY5lCAzKodKbFNZKUoPAolBURFw1VE6Ng3osf8OOimz8
+# 4noTu5bOlYKSrSjGk9ISXzSOhfGEV6kU1RpKCLr3Vg/2Mk8TZmJTscR8ocrNkQ==
 # SIG # End signature block

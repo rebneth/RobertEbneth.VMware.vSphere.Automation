@@ -4,7 +4,9 @@ VMware Automation Powershell Modules and Scripts by Robert Ebneth
 **VMware Reporting Powershell Module and Scripts
 used for VMware administration and documentation**
 
-Latest Update: May, 11th, 2017
+Latest Update: July, 12th, 2017
+Notes: Compatibility with PowerCLI
+       Bugfix in pipeline input for clustername
 
 DeployVMfromTab					- Deploys VMs from csv Table  
 

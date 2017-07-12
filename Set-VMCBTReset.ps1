@@ -1,9 +1,9 @@
-﻿function Set-VMCBTenable {
+﻿function Set-VMCBTReset {
 <#
 .SYNOPSIS
-  Script enables the CBT (Changed Block Tracking) Setting on all VMs based per Cluster
+  Script resets the CBT (Changed Block Tracking) Setting on all VMs based per Cluster
 .DESCRIPTION
-  Script enables the CBT (Changed Block Tracking) Setting on all VMs based per Cluster
+  Script resets the CBT (Changed Block Tracking) Setting on all VMs based per Cluster
 .NOTES
   Release 1.2
   Robert Ebneth
@@ -14,16 +14,15 @@
   Selects only VMs for this vSphere Cluster. If nothing is specified,
   all vSphere Clusters will be taken.
 .EXAMPLE
-  Set-VMCBTenable -c < vSphere Cluster Name >
+  Set-VMCBTReset -c < vSphere Cluster Name >
 #>
 
-[CmdletBinding()]
+[CmdletBinding(ConfirmImpact='High', SupportsShouldProcess=$true )]
 param(
 	[Parameter(Mandatory = $False, ValueFromPipeline=$true)]
 	[Alias("c")]
 	[string]$CLUSTER
 )
-
 
 Begin {
     # Check and if not loaded add Powershell core module
@@ -49,18 +48,35 @@ Process {
         }
 		foreach ($vm in Get-Cluster $Cluster | Get-VM) {
 			$view = Get-View $vm
-			if ($view.Config.Version -ge "vmx-07" -and $view.Config.changeTrackingEnabled -eq $false) {
-				if ($vm.PowerState -eq 'PoweredOff') { Write-Host "CBT cannot be enabled on VM $vm because it is PoweredOff." -ForegroundColor Red; continue }
-                if ($view.snapshot -ne $null) {Write-Host "CBT cannot be enabled on VM $vm has active snapshots." -ForegroundColor Red; continue}
-                #Enable CBT 
-				Write-Host "Enabling CBT for" $vm
-				$spec = New-Object VMware.Vim.VirtualMachineConfigSpec
-				$spec.ChangeTrackingEnabled = $true 
-				$vm.ExtensionData.ReconfigVM($spec) 
+			if ($view.Config.Version -ge "vmx-07" -and $view.Config.changeTrackingEnabled -eq $true) {
+				if ($vm.PowerState -eq 'PoweredOff') { Write-Host "CBT cannot be enabled on VM $vm because it is PoweredOff." -ForegroundColor Yellow; continue }
+                if ($view.snapshot -ne $null) {Write-Host "CBT cannot be enabled on VM $vm has active snapshots." -ForegroundColor Yellow; continue}
+                
+                if ($PSCmdlet.ShouldProcess("$($vm)", "Reset CBT Property of VM"))
+                    { Write-Host "Reset CBT Property of VM"
+                        #Disable CBT 
+				        Write-Host "Disabling CBT for $($vm)..."
+				        $spec = New-Object VMware.Vim.VirtualMachineConfigSpec
+				        $spec.ChangeTrackingEnabled = $false 
+				        $vm.ExtensionData.ReconfigVM($spec)
+
+                        #Take/Remove Snapshot to reconfigure VM State
+				        $SnapName = New-Snapshot -vm $vm -Quiesce -Name "CBT-Rest-Snapshot"
+				        $SnapRemove = Remove-Snapshot -Snapshot $SnapName -Confirm:$false 
+
+                        #Enable CBT 
+				        Write-Host "Enabling CBT for $($vm)..."
+				        $spec = New-Object VMware.Vim.VirtualMachineConfigSpec
+				        $spec.ChangeTrackingEnabled = $true 
+				        $vm.ExtensionData.ReconfigVM($spec) 
 								
-				#Take/Remove Snapshot to reconfigure VM State
-				$SnapName = New-Snapshot -vm $vm -Quiesce -Name "CBT-Verify-Snapshot"
-				$SnapRemove = Remove-Snapshot -Snapshot $SnapName -Confirm:$false
+				        #Take/Remove Snapshot to reconfigure VM State
+				        $SnapName = New-Snapshot -vm $vm -Quiesce -Name "CBT-Verify-Snapshot"
+				        $SnapRemove = Remove-Snapshot -Snapshot $SnapName -Confirm:$false
+                    }
+                  else
+                    { Write-Host "Skipping Reset CBT for VM $($vm)..."
+                } ### End if else 
 			}
 		} ### End Foreach VM in cluster
     } ### End Foreach Cluster
@@ -73,8 +89,8 @@ End {
 # SIG # Begin signature block
 # MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUVhbNMBZNQm4pIZ6sL7jtK3ea
-# ZGKgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU2m6MIbimo/cwo+IVmb56/7rJ
+# ysOgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
 # AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
 # HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
 # cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
@@ -94,11 +110,11 @@ End {
 # MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
 # dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
 # DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUVUMg3yp1nsHt
-# L9GJFivdxoLfqVkwDQYJKoZIhvcNAQEBBQAEggEAOelbgeViWHWJPhP2O5JfYh68
-# mkINqk4w2lwKVKkmwX4e3j5FzcqCNiCRyp+xS5myZ1SSm1bDtxCNuLZu59LrPdlb
-# Wlhn/fEr0KWD1D2J5aCAlRQ8FFiEpYTFLS6lUaqT/xvZPE1WTdfNcDKTmHtOPqVm
-# gZ6PB+LqSwrimgVEppW3FJXcepVDPjw0uHQ80nmWfZGGSMThxhI8chbw49BshbVw
-# swe7OKAVHAWR1rAxTGGAFKU1IkKyJZMM9OZQQXC21XnrQR2Vc6nhoMA3H6ZsyRKH
-# QQzH32hcavQCBsUTKdYbvUVemzzZz5nYpWGGh+PPg39v8MaS0wh0tOoOjsDOiQ==
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUXE7QIXEB8EMx
+# 7z4nl1UcaP6RXRswDQYJKoZIhvcNAQEBBQAEggEAfgIOV6Oj4zf+pY/3Cg0suIeU
+# TOyyl8JYgWFDduguyAUXk85KFgSNfwOvUsNTjlz4T78DweVMg6FefoY5cVbggMsx
+# en3n09CU2deC2VphYNyXp5GrOfpmyhGfvaNiP49K90VWHpqEvCdop6RtbZwPVMYi
+# YcMS0kgMfYC7kmOv229bfP5lmOEW4hL2biY6dK1ndef6D0v3aIxkCaFXymCjEYKW
+# 3WwClQqVwJZel7ysTB0pxTomTS3oBiIJwGgtJUXy136Vpszf8USr1jnSg5jBpfCA
+# q+f5PxoWO+1W/Q8lVuVvMSn5f9LQ2cTwjF5lkwusu4096zafJR1Zng/n0ioF2w==
 # SIG # End signature block

@@ -5,9 +5,9 @@
 .DESCRIPTION
   Creates a csv file with VMware VM's FolderPath 
 .NOTES
-  Release 1.0
+  Release 1.1
   Robert Ebneth
-  March, 27th, 2017
+  July, 12th, 2017
 .LINK
   http://github.com/rebneth/RobertEbneth.VMware.vSphere.Automation
 .PARAMETER Filename
@@ -24,9 +24,10 @@ param(
 )
 
 
-	# Check and if not loaded add powershell snapin
-	if (-not (Get-PSSnapin VMware.VimAutomation.Core -ErrorAction SilentlyContinue)) {
-		Add-PSSnapin VMware.VimAutomation.Core}
+    # Check and if not loaded add Powershell core module
+    if ( !(Get-Module -Name VMware.VimAutomation.Core -ErrorAction SilentlyContinue) ) {
+        Import-Module VMware.VimAutomation.Core
+    }
     # We need the common function CheckFilePathAndCreate
     Get-Command "CheckFilePathAndCreate" -errorAction SilentlyContinue | Out-Null
     if ( $? -eq $false) {
@@ -79,8 +80,8 @@ param(
 # SIG # Begin signature block
 # MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUXKFUlzUhtREKYOkFn5YwP1zs
-# IBigggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU3OU0NuMCSSaiyEGCwDekaSXh
+# imOgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
 # AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
 # HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
 # cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
@@ -100,11 +101,11 @@ param(
 # MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
 # dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
 # DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUYff8Mweix2U1
-# zbz6qPwqQbHSCMswDQYJKoZIhvcNAQEBBQAEggEAHkNgEG3MBo5tInNTMWjE1MEc
-# 4acdBhLS5mvUFuYsWz6tHFhh7LSNqeV5BLEu2YJ8mh5fFfeS7nEyUtKjRS/5rHP1
-# FG9r94+MMxkgAQMQlsNHIWQMwoTOUmM3I7p4pWjE70QqCpXY1cnnf+qB51FfIdwt
-# zpj4p8HIuOHeyEtUTWTrhVm/Q0/gTLYT7H4MsgbUzFHyaADHlnmhG4xo562UvUDZ
-# 57fVLLGs4gvwlv1UMtLyiSCOHVKvxpIJVYqIOCK8zfLh7SPWFyL8/Y10RDa2IUta
-# 1cdro1Gtp5DVzOUeMvNZDtmjPjxoIAAUQnk284u65G39yOS7BiHtPZQpvXix/A==
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUFJ14+BSRl4UE
+# 8fE38hS66OnzOBgwDQYJKoZIhvcNAQEBBQAEggEAhLer1uRlYhlzeJvOBf+V07xk
+# OXyRK1TlXZfS6xXHDyniSjcTrWzTtYQ88JUQg4PBCsKvEcH1tnt2EV2oMAf+/e6k
+# RWL9jneutYqGxl9igQPlIW80ICYZ/pbHpqig/0MBc9Ay7RLckFz2Od/e4Z4mtLKE
+# DGz8tmWG+Mcu9mqArkvyE0uzg1yx7luGi9Pp0lydsRsi47SVkPjY2VFOHRT5Nye1
+# 6pY97vEfWCbmVGlvG4GkfEyadwWNfUS7eV5TAdaFSb7j5qe1jWQPRyzHIYF3f4aF
+# wi5UswenKQunyXB02OCxj4Jjbku7jIGA80rrYO63ldTeJsyjRultPWirEo1WRg==
 # SIG # End signature block

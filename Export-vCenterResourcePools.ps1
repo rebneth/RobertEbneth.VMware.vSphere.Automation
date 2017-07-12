@@ -11,9 +11,9 @@
   Resource Pool Settings can be reconstructed by Script
   Set-VMResourcePool
 .NOTES
-  Release 1.1
+  Release 1.3
   Robert Ebneth
-  February, 14th, 2017
+  July, 12th, 2017
 .LINK
   http://github.com/rebneth/RobertEbneth.VMware.vSphere.Automation
 .PARAMETER Cluster
@@ -31,8 +31,7 @@
 
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory = $True, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Position = 0,
-    HelpMessage = "Enter Name of vCenter Cluster")]
+    [Parameter(Mandatory = $True, ValueFromPipeline=$true, Position = 0)]
     [string]$Cluster,
 	[Parameter(Mandatory = $False, ValueFromPipeline=$false, Position = 1,
 	HelpMessage = "Enter the path to the xml output file")]
@@ -43,9 +42,10 @@ param(
 )
 
 Begin {
-	# Check and if not loaded add powershell snapin
-	if (-not (Get-PSSnapin VMware.VimAutomation.Core -ErrorAction SilentlyContinue)) {
-		Add-PSSnapin VMware.VimAutomation.Core}
+    # Check and if not loaded add Powershell core module
+    if ( !(Get-Module -Name VMware.VimAutomation.Core -ErrorAction SilentlyContinue) ) {
+        Import-Module VMware.VimAutomation.Core
+    }
 	#$OUTPUTFILENAME = CheckFilePathAndCreate VMPowerState.csv $FILENAME
     $AllResourcePools = @()
     $AllVMsResourcePoolPath = @()
@@ -115,8 +115,8 @@ End {
 # SIG # Begin signature block
 # MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUYCMyf7glTA52umrZ+DE4J6+j
-# VSKgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUax8wk85UnYc6c64zVFMPbnVw
+# cdqgggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
 # AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
 # HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
 # cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
@@ -136,11 +136,11 @@ End {
 # MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
 # dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
 # DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUyPfBX1WqBUPy
-# J+MX6EktPIgWghgwDQYJKoZIhvcNAQEBBQAEggEADyYt+DOxFZcDM1cso/+IGs6x
-# NYzhIqHa4jeTeQmhqr7jw4IYNrVHZKTXpE8fUhEr7tM1QJ9zSfA9QV9Hx5qz7TFb
-# AuNVsQjK4LIPo5Fl4vRP1d2UiN1Sw99xV8yfa83ArVCbWPbVU+1FZy96PrjNXmVI
-# e4gmqawsYgbo17CJGTWZmaRUwMobV45qe7EkMlbjN+OMYF/PgQMqjggLzaNR9SWp
-# B8W+IWCC+I94EWFDTqENcaw+G08GSPAFRfNioULCNpcqaJkPOzEefNixjYbRwRnO
-# 1Kv5vYE+SFKO+7NuvuS87I28ILp0nLZZqcibtMmpwExiJFj7KR9WAjvDrU8yuQ==
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQULB6e+YlQGlV9
+# JuLyldyiod1yDQYwDQYJKoZIhvcNAQEBBQAEggEARYG1lkDnRj1axRAnq2zPvn/1
+# asXXpOBq/avE8HWhbT0NXDopCMornOFGH/bAwbzPmKMrdLo14wUGts6Ww5xtoYz5
+# 8oNHNeiurVHWf7ypuLacN4imsQTCMOXajWhgRCjwhOK806DVG/nevBPTGrcOylxZ
+# +g7K/SEwyt3lUPpJm3C6I5xy2f0wgCVCyeBMpEBNK46NJyRsu9jjFtLf/XNqOk0a
+# R4CZVZXi3gZM6KQaVR5B9S8R/ro4oKON7ayXRJN7fVfHJ5SjXP4aYu1xXbD1YMzI
+# /Zxwz5bTvaXuTZDO6TyhFx24lrDYCIt56pkiMy/XzWJhCE1goWEMih22TqjpNA==
 # SIG # End signature block

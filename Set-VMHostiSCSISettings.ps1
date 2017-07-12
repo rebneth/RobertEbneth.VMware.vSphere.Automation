@@ -9,9 +9,9 @@
   New iSCSI Target Bindings for the ESXi Host will be added.
   PowerCLI Session must be connected to vCenter Server using Connect-VIServer
 .NOTES
-  Release 1.1
+  Release 1.2
   Robert Ebneth
-  February, 14th
+  July, 12th
 .LINK
   http://github.com/rebneth/RobertEbneth.VMware.vSphere.Automation
 .PARAMETER Name
@@ -57,9 +57,10 @@ param(
 )
 
 Begin {
-	# Check and if not loaded add powershell snapin
-	if (-not (Get-PSSnapin VMware.VimAutomation.Core -ErrorAction SilentlyContinue)) {
-		Add-PSSnapin VMware.VimAutomation.Core}
+    # Check and if not loaded add Powershell core module
+    if ( !(Get-Module -Name VMware.VimAutomation.Core -ErrorAction SilentlyContinue) ) {
+        Import-Module VMware.VimAutomation.Core
+    }
 }
 
 Process {
@@ -170,8 +171,8 @@ Process {
 # SIG # Begin signature block
 # MIIFmgYJKoZIhvcNAQcCoIIFizCCBYcCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUJZPBH8T1PJe6WzYVEtoCdkri
-# E3agggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUVpywg+sxFCbmu94NY+aNvfD5
+# Ci2gggMmMIIDIjCCAgqgAwIBAgIQPWSBWJqOxopPvpSTqq3wczANBgkqhkiG9w0B
 # AQUFADApMScwJQYDVQQDDB5Sb2JlcnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcw
 # HhcNMTcwMjA0MTI0NjQ5WhcNMjIwMjA1MTI0NjQ5WjApMScwJQYDVQQDDB5Sb2Jl
 # cnRFYm5ldGhJVFN5c3RlbUNvbnN1bHRpbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IB
@@ -191,11 +192,11 @@ Process {
 # MIIB2gIBATA9MCkxJzAlBgNVBAMMHlJvYmVydEVibmV0aElUU3lzdGVtQ29uc3Vs
 # dGluZwIQPWSBWJqOxopPvpSTqq3wczAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
 # DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUj3v2CC5GT7ls
-# 4bYmKaJ7/CxIbKwwDQYJKoZIhvcNAQEBBQAEggEAkMsyha8nQD0vX1/8QpXe5+oz
-# sxOZTZ64xajGmZV4CodRnaWNwuoDM4jWCwmUFUs4wEbxbhuzSJOvzgFgPkJaIJmA
-# zWY13YBmuUNLR1Cz21oA7UBTv3qz+DuoBv9TOk0Aj5LfsKyN+874Zz7HJS6heaKs
-# M42dPXANixA0VdytpGau1p5gjg3JynCNsPFeubFepvvZA7dFPu+Q7EsSwUjn3pGK
-# q1Xc2k+BjKTMPDEvqRlFY8n1dOVbZ9ukJXjiy+CqG2v9dJ9Vt3v9nnuhHZ6K52JU
-# OkuAlBEmAQgjOEol8T8iYj2JVzzN4ETEFvXhhyA7Nc5TNIoudBUGZoHUE2tn1g==
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUd5GgCRpkIu2/
+# v59CMOAN263H8KswDQYJKoZIhvcNAQEBBQAEggEAglQik2H4sXUAS2T7rr5rg1Vm
+# /KBjJzi1vegHJJ7TQupg+d7pChKeu+p0koPluGvdLHQWZRiVXPV612feZH7vSitM
+# UHXkMhZNP4JFzD7PpiIbj9BwtcDfZVRqMQ0GWCB7wJ8N4ml9kd5pvB9o4iwXhNV4
+# fKbCweriusihRoRPwIFmJIqM89MulIruMevcoO6wk4O/6IWjMklbwFCcp5iYbct2
+# uJT5ByF7CpBXSYPhVLRNU5Li51lIecrZKKmUiTrh6cEgFJv+PcNlJ83TPFlujfD2
+# OC/z1pd9lqThruUOn3H7T0HbgwOCSGKeyUusFHTMVs6ZufOFeRsw82h9RZjlog==
 # SIG # End signature block
